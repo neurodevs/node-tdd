@@ -1,8 +1,13 @@
-import AbstractSpruceTest, {
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+
+import assert from '../../functions/assert.js'
+
+const {
+    default: AbstractSpruceTest,
     test,
-    assert as assertUtil,
-} from '@sprucelabs/test-utils'
-import assert from '../../functions/assert'
+    assert: assertUtil,
+} = require('@sprucelabs/test-utils')
 
 export default class AssertTest extends AbstractSpruceTest {
     protected static async beforeEach() {

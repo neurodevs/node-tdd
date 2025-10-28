@@ -6,7 +6,7 @@ import assert from '../../functions/assert.js'
 const {
     default: AbstractSpruceTest,
     test,
-    assert: assertUtil,
+    assert: spruceAssert,
 } = require('@sprucelabs/test-utils')
 
 export default class AssertTest extends AbstractSpruceTest {
@@ -15,13 +15,11 @@ export default class AssertTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async throwsIfIsTrueIsFalse() {
-        assertUtil.doesThrow(
-            () => {
-                assert.isTrue(false)
-            },
-            undefined,
-            'Expected true but got false.'
+    protected static async returnsAssertObjectFromSpruceTestUtils() {
+        spruceAssert.isEqualDeep(
+            assert,
+            spruceAssert,
+            'Did not return expected assert object!'
         )
     }
 }

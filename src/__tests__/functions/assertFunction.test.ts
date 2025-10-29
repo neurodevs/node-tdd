@@ -9,7 +9,7 @@ const {
     assert: spruceAssert,
 } = require('@sprucelabs/test-utils')
 
-export default class AssertTest extends AbstractSpruceTest {
+export default class AssertFunctionTest extends AbstractSpruceTest {
     protected static async beforeEach() {
         await super.beforeEach()
     }

@@ -23,6 +23,5 @@ export default class TestFunctionTest extends AbstractSpruceTest {
             spruceTest,
             'Did not return expected test object!'
         )
-        debugger
     }
 }

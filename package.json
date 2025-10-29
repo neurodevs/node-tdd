@@ -1,6 +1,6 @@
 {
   "name": "@neurodevs/node-tdd",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A Node.js framework for test-driven development (TDD)",
   "type": "module",
   "keywords": [
@@ -41,13 +41,14 @@
     "watch.rebuild": "yarn run clean.all && yarn install && yarn run watch.build.dev",
     "watch.tsc": "tsc -w"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "@neurodevs/generate-id": "^1.0.5",
+  "dependencies": {
     "@sprucelabs/jest-json-reporter": "^9.0.71",
     "@sprucelabs/resolve-path-aliases": "^3.0.29",
     "@sprucelabs/test": "^10.0.25",
-    "@sprucelabs/test-utils": "^6.0.117",
+    "@sprucelabs/test-utils": "^6.0.117"
+  },
+  "devDependencies": {
+    "@neurodevs/generate-id": "^1.0.5",
     "@types/node": "^24.9.1",
     "chokidar-cli": "^3.0.0",
     "eslint": "^9.38.0",

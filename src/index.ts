@@ -1,3 +1,7 @@
+import AbstractModuleTest from './impl/AbstractModuleTest.js'
+
+export default AbstractModuleTest
+
 export { default as AbstractModuleTest } from './impl/AbstractModuleTest.js'
 export * from './impl/AbstractModuleTest.js'
 

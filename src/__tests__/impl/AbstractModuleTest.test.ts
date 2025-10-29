@@ -22,4 +22,12 @@ export default class AbstractModuleTestClassTest extends AbstractSpruceTest {
             'Did not extend AbstractSpruceTest!'
         )
     }
+
+    @test()
+    protected static async hasProtectedStaticGenerateIdMethod() {
+        // @ts-ignore
+        const randomId = AbstractModuleTest.generateId()
+
+        assert.isTruthy(randomId, 'generateId did not return an id!')
+    }
 }

@@ -2,14 +2,11 @@ import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 
 import assert from '../../functions/assert.js'
+import AbstractPackageTest from '../AbstractPackageTest.js'
 
-const {
-    default: AbstractSpruceTest,
-    test,
-    assert: spruceAssert,
-} = require('@sprucelabs/test-utils')
+const { test, assert: spruceAssert } = require('@sprucelabs/test-utils')
 
-export default class AssertFunctionTest extends AbstractSpruceTest {
+export default class AssertFunctionTest extends AbstractPackageTest {
     protected static async beforeEach() {
         await super.beforeEach()
     }

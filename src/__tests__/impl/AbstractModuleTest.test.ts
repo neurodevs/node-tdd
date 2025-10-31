@@ -2,6 +2,7 @@ import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 
 import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
+import AbstractPackageTest from '../AbstractPackageTest.js'
 
 const {
     default: AbstractSpruceTest,
@@ -9,7 +10,7 @@ const {
     assert,
 } = require('@sprucelabs/test-utils')
 
-export default class AbstractModuleTestClassTest extends AbstractSpruceTest {
+export default class AbstractModuleTestClassTest extends AbstractPackageTest {
     protected static async beforeEach() {
         await super.beforeEach()
     }

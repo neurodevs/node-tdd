@@ -42,13 +42,14 @@
     "watch.tsc": "tsc -w"
   },
   "dependencies": {
-    "@neurodevs/generate-id": "^1.0.8",
+    "@neurodevs/generate-id": "^1.0.9",
     "@sprucelabs/jest-json-reporter": "^9.0.71",
     "@sprucelabs/resolve-path-aliases": "^3.0.29",
     "@sprucelabs/test": "^10.0.25",
     "@sprucelabs/test-utils": "^6.0.117"
   },
   "devDependencies": {
+    "@neurodevs/node-tdd": "^0.2.2",
     "@types/node": "^24.9.1",
     "chokidar-cli": "^3.0.0",
     "eslint": "^9.38.0",

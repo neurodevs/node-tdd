@@ -1,8 +1,4 @@
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
-
-const { test: spruceTest } = require('@sprucelabs/test-utils')
-
-const test = spruceTest
+import testUtils from '@sprucelabs/test-utils'
+const { test } = testUtils
 
 export default test

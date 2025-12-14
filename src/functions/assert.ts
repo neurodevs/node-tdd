@@ -1,11 +1,4 @@
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
-
-const {
-    assert: spruceAssert,
-    ISpruceAssert,
-} = require('@sprucelabs/test-utils')
-
-const assert: typeof ISpruceAssert = spruceAssert
+import testUtils from '@sprucelabs/test-utils'
+const { assert } = testUtils
 
 export default assert

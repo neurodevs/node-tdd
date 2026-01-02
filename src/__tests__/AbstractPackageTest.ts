@@ -1,4 +1,4 @@
-import AbstractModuleTest from '@neurodevs/node-tdd'
+import AbstractModuleTest from '../impl/AbstractModuleTest.js'
 
 export default abstract class AbstractPackageTest extends AbstractModuleTest {
     protected static async beforeEach() {

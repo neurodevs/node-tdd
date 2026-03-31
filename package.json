@@ -59,6 +59,9 @@
     "testEnvironment": "node",
     "testMatch": [
       "<rootDir>/build/__tests__/**/*.test.js?(x)"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@sprucelabs/test-utils$": "<rootDir>/node_modules/@sprucelabs/test-utils/build/index.js"
+    }
   }
 }

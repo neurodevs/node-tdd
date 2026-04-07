@@ -46,6 +46,8 @@
     "@neurodevs/eslint-config-ndx": "^1.0.1",
     "@neurodevs/node-tdd": "^0.2.5",
     "@neurodevs/prettier-config-ndx": "^1.0.2",
+    "@regressionproof/cli": "^0.9.4",
+    "@regressionproof/jest-reporter": "^0.9.4",
     "jest": "^30.2.0",
     "jest-circus": "^30.2.0",
     "prettier": "^3.8.1",
@@ -62,6 +64,10 @@
     ],
     "moduleNameMapper": {
       "^@sprucelabs/test-utils$": "<rootDir>/node_modules/@sprucelabs/test-utils/build/index.js"
-    }
+    },
+    "reporters": [
+      "default",
+      "@regressionproof/jest-reporter"
+    ]
   }
 }

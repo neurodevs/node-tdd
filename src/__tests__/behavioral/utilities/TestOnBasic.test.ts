@@ -8,14 +8,17 @@ let afterEachCount = 0
 
 export default class TestOnBasic extends AbstractModuleTest {
     protected static async beforeAll() {
+        await super.beforeAll()
         beforeAllCount += 1
     }
 
     protected static async beforeEach() {
+        await super.beforeEach()
         beforeEachCount += 1
     }
 
     protected static async afterEach() {
+        await super.afterEach()
         afterEachCount += 1
     }
 

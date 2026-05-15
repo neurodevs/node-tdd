@@ -20,8 +20,14 @@ export default class TestOnBasic extends AbstractModuleTest {
     }
 
     @test()
-    protected static async doesCallBeforeAll() {
+    protected static async calledBeforeAll() {
         assert.isEqual(beforeAllCount, 1)
+    }
+
+    @test()
+    protected static async calledBeforeAndAfterEach() {
+        assert.isEqual(beforeEachCount, 2)
+        assert.isEqual(afterEachCount, 1)
     }
 
     @test()
@@ -38,12 +44,6 @@ export default class TestOnBasic extends AbstractModuleTest {
     ) {
         assert.isEqual(hello, 'hello')
         assert.isEqual(world, 'world')
-    }
-
-    @test()
-    protected static async calledBeforeAndAfterEach() {
-        assert.isEqual(beforeEachCount, 4)
-        assert.isEqual(afterEachCount, 3)
     }
 
     @test()

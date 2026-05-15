@@ -103,16 +103,11 @@ export default class TkTextWidget extends TkBaseWidget implements TextWidget {
         }
 
         const isScrolledAllTheWay = this.isLogScrolledAllTheWay()
-        const logSelection = this.text.textBuffer.selectionRegion
         const markupType = this.markupType(content)
         const normalizedContent =
             markupType === 'ansi' ? this.padAnsiSegments(content) : content
 
         this.text.setContent(normalizedContent, markupType)
-
-        if (logSelection) {
-            this.text.textBuffer.setSelectionRegion(logSelection)
-        }
 
         if (this.shouldAutoScrollWhenAppendingContent && isScrolledAllTheWay) {
             this.text.scrollToBottom()

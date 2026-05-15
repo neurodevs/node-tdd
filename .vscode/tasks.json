@@ -38,7 +38,7 @@
     {
       "label": "test.reporter",
       "type": "shell",
-      "command": "node build/workspace/testRunner.cli.js --watchMode smart",
+      "command": "node build/workspace/testRunner.cli.js --watchMode standard",
       "promptOnClose": false,
       "group": "test",
       "runOptions": {

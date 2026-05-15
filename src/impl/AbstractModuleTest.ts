@@ -8,10 +8,10 @@ export default class AbstractModuleTest {
     protected static async beforeAll() {
         this.cwd = process.cwd()
     }
-
-    protected static async afterAll() {}
+    
     protected static async beforeEach() {}
     protected static async afterEach() {}
+    protected static async afterAll() {}
 
     protected static generateId(includeDashes?: boolean) {
         return generateId(includeDashes)
@@ -45,9 +45,9 @@ export default class AbstractModuleTest {
     protected cwd = process.cwd()
 
     protected async beforeAll() {}
-    protected async afterAll() {}
     protected async beforeEach() {}
     protected async afterEach() {}
+    protected async afterAll() {}
 
     protected generateId(includeDashes?: boolean) {
         return AbstractModuleTest.generateId(includeDashes)

@@ -4,7 +4,7 @@ import {
     START_DIVIDER,
     retrocycle,
 } from '@sprucelabs/jest-json-reporter'
-import escapeRegExp from 'lodash/escapeRegExp.js'
+import { escapeRegExp } from 'lodash-es'
 import { SpruceTestFile, TestResultStatus, TestResults } from './test.types.js'
 
 interface AggregatedResult {

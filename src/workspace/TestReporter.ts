@@ -160,7 +160,12 @@ export default class TestReporter {
 
         void this.window.on('key', this.handleGlobalKeypress.bind(this))
         void this.window.on('kill', (payload: { code: any }) => {
-            if (!(payload.code instanceof Error)) {
+            if (payload.code instanceof Error) {
+                const term = (this.window as any).term as any
+                const doc = (this.window as any).getTermKitElement?.() as any
+                term?.grabInput?.({ mouse: 'button' })
+                doc?.draw?.()
+            } else {
                 void this.destroy()
             }
         })
@@ -834,7 +839,7 @@ function buildPatternButtonText(pattern: string | undefined): string {
     return pattern ? ' x ' : ' - '
 }
 
-interface TestReporterOptions {
+export interface TestReporterOptions {
     handleStartStop?: () => void
     handleRestart?: () => void
     handleQuit?: () => void

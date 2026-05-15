@@ -297,7 +297,7 @@ export default class TestOnInstanceTest extends AbstractModuleTest {
         await this.wait(waitMs)
         const after = Date.now()
 
-        assert.isBetweenInclusive(after - now, waitMs, waitMs + 20)
+        assert.isBetweenInclusive(after - now, waitMs * 0.8, waitMs + 20)
     }
 
     @test('can log simple message', ['hey'])

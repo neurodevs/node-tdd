@@ -52,6 +52,7 @@ export default class TestRunner extends EventEmitter {
         try {
             await this.commandService.execute(command, {
                 forceColor: true,
+                env: { NODE_NO_WARNINGS: '1' },
                 onError: async (data) => {
                     const isDebugMessaging = this.isDebugMessage(data)
 

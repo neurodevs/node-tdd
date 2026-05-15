@@ -68,4 +68,20 @@ export default class TestRunnerTest extends AbstractModuleTest {
         this.runner.emit('did-error', { message: 'test error' })
         assert.isEqual(errorMessage, 'test error')
     }
+
+    @test()
+    protected static async passesNodeNoWarningsToCommandService() {
+        let capturedEnv: Record<string, any> | undefined
+
+        const commandService = new CommandServiceImpl(this.cwd)
+        commandService.execute = async (_cmd: string, options?: any) => {
+            capturedEnv = options?.env
+            return { stdout: '' }
+        }
+
+        const runner = new TestRunner({ cwd: this.cwd, commandService })
+        await runner.run()
+
+        assert.isEqual(capturedEnv?.NODE_NO_WARNINGS, '1')
+    }
 }

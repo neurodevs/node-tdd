@@ -1,6 +1,6 @@
 {
   "name": "@neurodevs/node-tdd",
-  "version": "0.2.5",
+  "version": "1.0.0",
   "description": "A Node.js framework for test-driven development (TDD)",
   "type": "module",
   "keywords": [
@@ -65,7 +65,7 @@
       "<rootDir>/build"
     ],
     "moduleNameMapper": {
-      "^terminal-kit$": "<rootDir>/build/__mocks__/terminal-kit.js"
+      "^terminal-kit$": "<rootDir>/build/__tests__/mock-terminal-kit.js"
     },
     "setupFiles": [
       "<rootDir>/build/__tests__/support/jest.setup.js"

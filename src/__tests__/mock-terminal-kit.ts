@@ -1,4 +1,4 @@
-class FakeElement {
+export class FakeElement {
     public outputX: number
     public outputY: number
     public outputWidth: number
@@ -39,7 +39,7 @@ class FakeElement {
     }
 }
 
-class TextBox extends FakeElement {
+export class TextBox extends FakeElement {
     public content = ''
     public scrollY = 0
     public scrollX = 0
@@ -61,12 +61,12 @@ class TextBox extends FakeElement {
     public scrollToBottom() {}
 }
 
-class Bar extends FakeElement {
+export class Bar extends FakeElement {
     public setValue(_: number) {}
     public setContent(_: string) {}
 }
 
-class Layout extends FakeElement {
+export class Layout extends FakeElement {
     public computed = { xmin: 0, ymin: 0, width: 80, height: 24 }
     public zChildren: any[] = []
     public updateLayout() {}
@@ -81,7 +81,7 @@ class Layout extends FakeElement {
     public onParentResize() {}
 }
 
-class Palette {}
+export class Palette {}
 
 const fakeDocument = {
     eventSource: { on(_event: string, _cb: any) {} },

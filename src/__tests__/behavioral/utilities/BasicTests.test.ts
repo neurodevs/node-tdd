@@ -6,7 +6,7 @@ let beforeAllCount = 0
 let beforeEachCount = 0
 let afterEachCount = 0
 
-export default class Test extends AbstractModuleTest {
+export default class BasicTests extends AbstractModuleTest {
     protected static async beforeAll() {
         beforeAllCount += 1
     }

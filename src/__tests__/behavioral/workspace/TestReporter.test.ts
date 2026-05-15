@@ -66,6 +66,71 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async doesNotDestroyOnUncaughtException() {
+        const reporter = new TestReporter() as any
+        let destroyCalled = false
+        let killHandler: ((payload: { code: any }) => void) | undefined
+
+        const fakeWidget: any = new Proxy(
+            {},
+            {
+                get: (_t, prop: string) => {
+                    if (prop === 'getFrame') {
+                        return () => ({
+                            left: 0,
+                            top: 0,
+                            width: 100,
+                            height: 50,
+                        })
+                    }
+                    if (prop === 'getChildById') {
+                        return () => null
+                    }
+                    if (prop === 'getRows') {
+                        return () => [{}]
+                    }
+                    if (prop === 'getFocusedWidget') {
+                        return () => null
+                    }
+                    if (prop === 'on') {
+                        return (event: string, handler: any) => {
+                            if (event === 'kill') {
+                                killHandler = handler
+                            }
+                        }
+                    }
+                    return () => fakeWidget
+                },
+            }
+        )
+
+        reporter.widgets = { Widget: () => fakeWidget }
+        reporter.destroy = async () => {
+            destroyCalled = true
+        }
+
+        await reporter.start()
+
+        assert.isTruthy(killHandler, 'kill handler must be registered')
+
+        killHandler!({
+            code: new Error('terminal-kit mouse boundary crash'),
+        })
+        assert.isFalse(
+            destroyCalled,
+            'uncaughtException must not destroy the UI'
+        )
+
+        killHandler!({ code: 0 })
+        assert.isTrue(
+            destroyCalled,
+            'real exit signal must still destroy the UI'
+        )
+
+        clearInterval(reporter.updateInterval)
+    }
+
+    @test()
     protected static async errorLogIsCreatedWithFocusableSetToFalse() {
         const reporter = new TestReporter() as any
         let capturedTextOptions: any
@@ -83,8 +148,6 @@ export default class TestReporterTest extends AbstractModuleTest {
                 return id === 'errors' ? fakeCell : null
             },
         }
-
-        assert.isTrue(false)
 
         reporter.widgets = {
             Widget: (type: string, options: any) => {

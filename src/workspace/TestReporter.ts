@@ -159,7 +159,11 @@ export default class TestReporter {
         }
 
         void this.window.on('key', this.handleGlobalKeypress.bind(this))
-        void this.window.on('kill', this.destroy.bind(this))
+        void this.window.on('kill', (payload: { code: any }) => {
+            if (!(payload.code instanceof Error)) {
+                void this.destroy()
+            }
+        })
         void this.window.on('resize', this.handleWindowResize.bind(this))
 
         this.dropInTopLayout()

@@ -1,13 +1,13 @@
 import chalk from 'chalk'
 
-import assert from '../../utilities/assert.js'
-import test from '../../utilities/decorators.js'
+import assert from '../../../utilities/assert.js'
+import test from '../../../utilities/decorators.js'
 import assertUtil, {
     CIRCULAR_PLACEHOLDER,
     FUNCTION_PLACEHOLDER,
     NULL_PLACEHOLDER,
     UNDEFINED_PLACEHOLDER,
-} from '../../utilities/assert.utility.js'
+} from '../../../utilities/assert.utility.js'
 
 const teammate = {
     firstName: 'tay',

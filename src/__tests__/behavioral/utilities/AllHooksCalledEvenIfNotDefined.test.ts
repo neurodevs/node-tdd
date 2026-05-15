@@ -1,7 +1,7 @@
-import assert from '../../utilities/assert.js'
-import test from '../../utilities/decorators.js'
-import TestDecoratorResolver from '../../utilities/TestDecoratorResolver.js'
-import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
+import assert from '../../../utilities/assert.js'
+import test from '../../../utilities/decorators.js'
+import TestDecoratorResolver from '../../../utilities/TestDecoratorResolver.js'
+import AbstractModuleTest from '../../../impl/AbstractModuleTest.js'
 
 let beforeBeforeAllCount = 0
 let afterBeforeAllCount = 0

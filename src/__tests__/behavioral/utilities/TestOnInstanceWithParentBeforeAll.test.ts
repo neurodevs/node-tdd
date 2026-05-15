@@ -1,6 +1,6 @@
-import test, { suite } from '../../utilities/decorators.js'
-import assert from '../../utilities/assert.js'
-import AbstractForInstanceTest from '../support/AbstractForInstanceTest.js'
+import test, { suite } from '../../../utilities/decorators.js'
+import assert from '../../../utilities/assert.js'
+import AbstractForInstanceTest from '../../support/AbstractForInstanceTest.js'
 
 @suite()
 export default class TestOnInstanceWithParentBeforeAllTest extends AbstractForInstanceTest {

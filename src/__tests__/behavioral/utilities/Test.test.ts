@@ -1,6 +1,6 @@
-import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
-import test from '../../utilities/decorators.js'
-import assert from '../../utilities/assert.js'
+import AbstractModuleTest from '../../../impl/AbstractModuleTest.js'
+import test from '../../../utilities/decorators.js'
+import assert from '../../../utilities/assert.js'
 
 let beforeAllCount = 0
 let beforeEachCount = 0

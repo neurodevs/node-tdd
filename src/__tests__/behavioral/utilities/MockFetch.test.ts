@@ -1,9 +1,9 @@
 import generateId from '@neurodevs/generate-id'
 
-import assert from '../../utilities/assert.js'
-import test, { suite } from '../../utilities/decorators.js'
-import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
-import MockFetch, { ExpectedRequest } from '../MockFetch.js'
+import assert from '../../../utilities/assert.js'
+import test, { suite } from '../../../utilities/decorators.js'
+import AbstractModuleTest from '../../../impl/AbstractModuleTest.js'
+import MockFetch, { ExpectedRequest } from '../../MockFetch.js'
 
 @suite()
 export default class MockFetchTest extends AbstractModuleTest {

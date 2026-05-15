@@ -1,7 +1,7 @@
-import test, { suite } from '../../utilities/decorators.js'
-import assert from '../../utilities/assert.js'
-import AbstractTestOnInstanceTest from '../support/AbstractTestOnInstanceTest.js'
-import TestDecoratorResolver from '../../utilities/TestDecoratorResolver.js'
+import test, { suite } from '../../../utilities/decorators.js'
+import assert from '../../../utilities/assert.js'
+import AbstractTestOnInstanceTest from '../../support/AbstractTestOnInstanceTest.js'
+import TestDecoratorResolver from '../../../utilities/TestDecoratorResolver.js'
 
 @suite()
 export default class TestOnInstanceExtendsTest extends AbstractTestOnInstanceTest {

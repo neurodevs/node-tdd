@@ -8,7 +8,7 @@ export default class AbstractModuleTest {
     protected static async beforeAll() {
         this.cwd = process.cwd()
     }
-    
+
     protected static async beforeEach() {}
     protected static async afterEach() {}
     protected static async afterAll() {}

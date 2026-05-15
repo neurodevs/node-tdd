@@ -1,11 +1,7 @@
 import chalk from 'chalk'
 import StackCleaner from '../utilities/StackCleaner.js'
 import durationUtil from './duration.utility.js'
-import {
-    SpruceTestFile,
-    TestFileTest,
-    TestRunnerStatus,
-} from './test.types.js'
+import { SpruceTestFile, TestFileTest, TestRunnerStatus } from './test.types.js'
 
 export default class TestLogItemGenerator {
     private startTimes: Record<string, number> = {}
@@ -52,9 +48,7 @@ export default class TestLogItemGenerator {
         return `^${durationColor}(${durationUtil.msToFriendly(duration)})^`
     }
 
-    private bulletBasedOnStatus(
-        status: TestFileTest['status'] | 'running'
-    ) {
+    private bulletBasedOnStatus(status: TestFileTest['status'] | 'running') {
         let bullet = 'y'
 
         switch (status) {

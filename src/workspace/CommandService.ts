@@ -184,8 +184,7 @@ export default class CommandServiceImpl implements CommandService {
             } catch {
                 try {
                     child.kill('SIGTERM')
-                } catch {
-                }
+                } catch {}
             }
         }
     }

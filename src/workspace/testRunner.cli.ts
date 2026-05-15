@@ -67,7 +67,9 @@ const reporter = new TestReporter({
 })
 
 async function runTests() {
-    if (running) return
+    if (running) {
+        return
+    }
     running = true
 
     try {
@@ -109,7 +111,9 @@ async function runTests() {
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
 function scheduleRerun(changedFile?: string) {
-    if (debounceTimer) clearTimeout(debounceTimer)
+    if (debounceTimer) {
+        clearTimeout(debounceTimer)
+    }
 
     if (currentWatchMode === 'smart' && changedFile) {
         const rel = path.relative(cwd, changedFile)

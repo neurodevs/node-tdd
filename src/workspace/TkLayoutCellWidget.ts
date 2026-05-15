@@ -1,7 +1,4 @@
-import {
-    LayoutCellWidget,
-    LayoutCellWidgetOptions,
-} from './layout.types.js'
+import { LayoutCellWidget, LayoutCellWidgetOptions } from './layout.types.js'
 import TkBaseWidget, { TkWidgetOptions } from './TkBaseWidget.js'
 
 export default class TkLayoutCellWidget

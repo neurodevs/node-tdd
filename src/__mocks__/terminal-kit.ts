@@ -15,17 +15,27 @@ class FakeElement {
     }
 
     public on(event: string, cb: Function) {
-        if (!this.handlers[event]) {this.handlers[event] = []}
+        if (!this.handlers[event]) {
+            this.handlers[event] = []
+        }
         this.handlers[event].push(cb)
     }
 
     public draw() {}
     public destroy() {}
     public resize(options: Record<string, any>) {
-        if (options.x !== undefined) {this.outputX = options.x}
-        if (options.y !== undefined) {this.outputY = options.y}
-        if (options.width !== undefined) {this.outputWidth = options.width}
-        if (options.height !== undefined) {this.outputHeight = options.height}
+        if (options.x !== undefined) {
+            this.outputX = options.x
+        }
+        if (options.y !== undefined) {
+            this.outputY = options.y
+        }
+        if (options.width !== undefined) {
+            this.outputWidth = options.width
+        }
+        if (options.height !== undefined) {
+            this.outputHeight = options.height
+        }
     }
 }
 
@@ -64,7 +74,9 @@ class Layout extends FakeElement {
     public setRowHeight(_idx: number, _h: any) {}
     public addColumn(_idx: number, _col: any) {}
     public setColumnWidth(_opts: any) {}
-    public getRows() { return [] }
+    public getRows() {
+        return []
+    }
     public off(_event: string, _cb: any) {}
     public onParentResize() {}
 }

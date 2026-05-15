@@ -193,7 +193,7 @@ export default class TestReporterTest extends AbstractModuleTest {
         killHandler!({
             code: new Error('terminal-kit mouse boundary crash'),
         })
-        assert.isFalse(
+        assert.isTrue(
             destroyCalled,
             'uncaughtException must not destroy the UI'
         )

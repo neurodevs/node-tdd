@@ -61,6 +61,10 @@
     "maxWorkers": 4,
     "testTimeout": 5000,
     "testEnvironment": "node",
+    "roots": ["<rootDir>/build"],
+    "moduleNameMapper": {
+      "^terminal-kit$": "<rootDir>/build/__mocks__/terminal-kit.js"
+    },
     "setupFiles": [
       "<rootDir>/build/__tests__/support/jest.setup.js"
     ],

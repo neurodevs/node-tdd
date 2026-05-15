@@ -636,13 +636,9 @@ export default class TestReporter {
             this.errorLog?.setText('  Nothing to report...')
         } else {
             !this.errorLog && this.dropInErrorLog()
-            const cleanedLog =
-                this.cwd
-                    ? errorContent.replace(
-                          new RegExp(this.cwd + '/', 'gim'),
-                          ''
-                      )
-                    : errorContent
+            const cleanedLog = this.cwd
+                ? errorContent.replace(new RegExp(this.cwd + '/', 'gim'), '')
+                : errorContent
 
             this.errorLog?.setText(cleanedLog)
         }
@@ -707,6 +703,7 @@ export default class TestReporter {
                 shouldLockHeightWithParent: true,
                 shouldLockWidthWithParent: true,
                 padding: { left: 1 },
+                focusable: false,
             })
         }
     }

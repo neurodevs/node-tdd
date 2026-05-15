@@ -82,6 +82,7 @@ export interface UniversalWidgetOptions {
     eventContract?: EventContract
     backgroundColor?: Color
     foregroundColor?: Color
+    focusable?: boolean
 }
 
 export interface WidgetFrame {

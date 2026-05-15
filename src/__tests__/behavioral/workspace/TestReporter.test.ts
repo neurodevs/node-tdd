@@ -64,4 +64,45 @@ export default class TestReporterTest extends AbstractModuleTest {
             reporter.updateResults({ totalTestFiles: 0 })
         })
     }
+
+    @test()
+    protected static async errorLogIsCreatedWithFocusableSetToFalse() {
+        const reporter = new TestReporter() as any
+        let capturedTextOptions: any
+
+        const fakeCell = { getFrame: () => ({ width: 100, height: 50 }) }
+
+        reporter.orientation = 'landscape'
+
+        reporter.bottomLayout = {
+            getRows: () => [{ id: 'row_1' }],
+            addColumn: () => {},
+            setColumnWidth: () => {},
+            updateLayout: () => {},
+            getChildById: (id: string) => {
+                return id === 'errors' ? fakeCell : null
+            },
+        }
+
+        assert.isTrue(false)
+
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                if (type === 'text') {
+                    capturedTextOptions = options
+                }
+                return {
+                    on: () => {},
+                    getFrame: () => ({ width: 100, height: 50 }),
+                }
+            },
+        }
+
+        reporter.dropInErrorLog()
+
+        assert.isFalse(
+            capturedTextOptions?.focusable,
+            'errorLog must be created with focusable: false to prevent UI lockup on click'
+        )
+    }
 }

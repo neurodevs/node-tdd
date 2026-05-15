@@ -33,7 +33,11 @@ import {
     ProgressBarWidgetOptions,
     ProgressBarWidget,
 } from './progressBar.types.js'
-import { TextWidgetOptions, TextWidget, textEventContract } from './text.types.js'
+import {
+    TextWidgetOptions,
+    TextWidget,
+    textEventContract,
+} from './text.types.js'
 import { UniversalWidgetOptions } from './widgets.types.js'
 import {
     WindowWidgetOptions,

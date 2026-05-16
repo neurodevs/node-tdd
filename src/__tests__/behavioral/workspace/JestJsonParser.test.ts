@@ -248,11 +248,11 @@ export default class JestJsonParserTest extends AbstractModuleTest {
             'yarn run go team ***************************START_JSON_DIVIDER***************************'
         )
         this.parser.write(
-            '{"status":"onTestFileStart","test":{"context":{},"duration":40472,"path":"/Users/taylorromero/Development/SpruceLabs/spruce-cli-workspace/packages/spruce-cli/build/__tests__/behavioral/tests/RunningTests.test.js"}}'
+            '{"status":"onTestFileStart","test":{"context":{},"duration":40472,"path":"/example/node-tdd/build/__tests__/behavioral/tests/RunningTests.test.js"}}'
         )
 
         this.parser.write(
-            `***************************END_JSON_DIVIDER***************************\n\t\t\t***************************START_JSON_DIVIDER***************************\n\t\t\t{"status":"onTestFileStart","test":{"context":{},"duration":48733,"path":"/Users/taylorromero/Development/SpruceLabs/spruce-cli-workspace/packages/spruce-cli/build/__tests__/behavioral/errors/CreatingANewErrorBuilder.test.js"}}\n\t\t\t***************************END_JSON_DIVIDER***************************\n\t\t\t***************************START_JSON_DIVIDER***************************\n\t\t\t{"status":"onTestFileStart","test":{"context":{},"duration":17443,"path":"/Users/taylorromero/Development/SpruceLabs/spruce-cli-workspace/packages/spruce-cli/build/__tests__/behavioral/watchers/WatchingForChanges.test.js"}}`
+            `***************************END_JSON_DIVIDER***************************\n\t\t\t***************************START_JSON_DIVIDER***************************\n\t\t\t{"status":"onTestFileStart","test":{"context":{},"duration":48733,"path":"/example/node-tdd/build/__tests__/behavioral/errors/CreatingANewErrorBuilder.test.js"}}\n\t\t\t***************************END_JSON_DIVIDER***************************\n\t\t\t***************************START_JSON_DIVIDER***************************\n\t\t\t{"status":"onTestFileStart","test":{"context":{},"duration":17443,"path":"/example/node-tdd/build/__tests__/behavioral/watchers/WatchingForChanges.test.js"}}`
         )
 
         const testResults = this.parser.getResults()
@@ -345,7 +345,7 @@ export default class JestJsonParserTest extends AbstractModuleTest {
             case 'onRunStart':
                 return `${START_DIVIDER}{"status":"onRunStart","results":{"numFailedTestSuites":0,"numFailedTests":0,"numPassedTestSuites":0,"numPassedTests":0,"numPendingTestSuites":0,"numPendingTests":0,"numRuntimeErrorTestSuites":0,"numTodoTests":0,"numTotalTestSuites":43,"numTotalTests":0,"openHandles":[],"snapshot":{"added":0,"didUpdate":false,"failure":false,"filesAdded":0,"filesRemoved":0,"filesRemovedList":[],"filesUnmatched":0,"filesUpdated":0,"matched":0,"total":0,"unchecked":0,"uncheckedKeysByFile":[],"unmatched":0,"updated":0},"startTime":1603459399575,"success":false,"testResults":[],"wasInterrupted":false}}${END_DIVIDER}`
             case 'onTestFileStart':
-                return `${START_DIVIDER}{"status":"onTestFileStart","test":{"context":{},"duration":40472,"path":"/Users/taylorromero/Development/SpruceLabs/spruce-cli-workspace/packages/spruce-cli/build/__tests__/${testFile}"}}${END_DIVIDER}`
+                return `${START_DIVIDER}{"status":"onTestFileStart","test":{"context":{},"duration":40472,"path":"/example/node-tdd/build/__tests__/${testFile}"}}${END_DIVIDER}`
             case 'onTestFileResult':
                 return `${START_DIVIDER}${JSON.stringify(
                     onTestFileResult(testFile ?? 'missing')

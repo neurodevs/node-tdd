@@ -1,14 +1,14 @@
 import chalk from 'chalk'
 import StackCleaner from '../utilities/StackCleaner.js'
 import durationUtil from './duration.utility.js'
-import { SpruceTestFile, TestFileTest, TestRunnerStatus } from './test.types.js'
+import { TestFile, TestFileTest, TestRunnerStatus } from './test.types.js'
 
 export default class TestLogItemGenerator {
     private startTimes: Record<string, number> = {}
     private testRunnerStatus!: TestRunnerStatus
 
     public generateLogItemForFile(
-        file: SpruceTestFile,
+        file: TestFile,
         status: TestRunnerStatus
     ): string {
         this.testRunnerStatus = status
@@ -76,7 +76,7 @@ export default class TestLogItemGenerator {
         return bullet
     }
 
-    private calculateDurationInMsForFile(file: SpruceTestFile): number {
+    private calculateDurationInMsForFile(file: TestFile): number {
         if (file.status !== 'running' && file.tests) {
             return file.tests.reduce((time, test) => {
                 time += test.duration
@@ -97,7 +97,7 @@ export default class TestLogItemGenerator {
         return delta
     }
 
-    public generateErrorLogItemForFile(file: SpruceTestFile): string {
+    public generateErrorLogItemForFile(file: TestFile): string {
         let errorContent = ''
 
         file.tests?.forEach((test) => {
@@ -122,7 +122,7 @@ export default class TestLogItemGenerator {
         this.startTimes = {}
     }
 
-    private generateStatusBlock(status: SpruceTestFile['status']) {
+    private generateStatusBlock(status: TestFile['status']) {
         const bgColor = this.colorBasedOnStatus(status)
 
         let statusLabel = status as string
@@ -150,7 +150,7 @@ export default class TestLogItemGenerator {
         )}^`
     }
 
-    private colorBasedOnStatus(status: SpruceTestFile['status']) {
+    private colorBasedOnStatus(status: TestFile['status']) {
         let color = 'y'
 
         switch (status) {

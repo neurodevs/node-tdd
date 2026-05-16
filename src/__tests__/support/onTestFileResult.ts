@@ -9,7 +9,7 @@ const onTestFileResult = (fileName: string) => ({
                     '/private/var/folders/qw/v2bfr0c94bn37vclwvcltsj40000gn/T/jest_dx',
                 clearMocks: false,
                 coveragePathIgnorePatterns: ['/node_modules/'],
-                cwd: '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api',
+                cwd: '/example/node-tdd',
                 detectLeaks: false,
                 detectOpenHandles: false,
                 errorOnDeprecated: false,
@@ -30,23 +30,15 @@ const onTestFileResult = (fileName: string) => ({
                     'tsx',
                     'node',
                 ],
-                moduleNameMapper: [
-                    [
-                        '^#spruce/(.*)$',
-                        '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/.spruce/$1',
-                    ],
-                ],
+                moduleNameMapper: [],
                 modulePathIgnorePatterns: [],
                 name: '4754e2ff2a5985c29465fd58674b1bf1',
                 prettierPath: 'prettier',
                 resetMocks: false,
                 resetModules: false,
                 restoreMocks: false,
-                rootDir:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api',
-                roots: [
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api',
-                ],
+                rootDir: '/example/node-tdd',
+                roots: ['/example/node-tdd'],
                 runner: 'jest-runner',
                 setupFiles: [],
                 setupFilesAfterEnv: [],
@@ -54,25 +46,25 @@ const onTestFileResult = (fileName: string) => ({
                 slowTestThreshold: 5,
                 snapshotSerializers: [],
                 testEnvironment:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/node_modules/jest-environment-node/build/index.js',
+                    '/example/node-tdd/node_modules/jest-environment-node/build/index.js',
                 testEnvironmentOptions: {},
                 testLocationInResults: false,
                 testMatch: ['**/__tests__/**/*.test.js?(x)'],
                 testPathIgnorePatterns: [
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/tmp/',
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/src/',
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/node_modules/',
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/testDirsAndFiles/',
+                    '/example/node-tdd/tmp/',
+                    '/example/node-tdd/src/',
+                    '/example/node-tdd/node_modules/',
+                    '/example/node-tdd/build/__tests__/testDirsAndFiles/',
                 ],
                 testRegex: [],
                 testRunner:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/node_modules/jest-jasmine2/build/index.js',
+                    '/example/node-tdd/node_modules/jest-jasmine2/build/index.js',
                 testURL: 'http://localhost',
                 timers: 'real',
                 transform: [
                     [
                         '^.+\\.[jt]sx?$',
-                        '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/node_modules/babel-jest/build/index.js',
+                        '/example/node-tdd/node_modules/babel-jest/build/index.js',
                         {},
                     ],
                 ],
@@ -83,8 +75,7 @@ const onTestFileResult = (fileName: string) => ({
                 watchPathIgnorePatterns: [],
             },
             hasteFS: {
-                _rootDir:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api',
+                _rootDir: '/example/node-tdd',
                 _files: {},
             },
             moduleMap: {
@@ -98,8 +89,7 @@ const onTestFileResult = (fileName: string) => ({
                     ],
                 ],
                 mocks: [],
-                rootDir:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api',
+                rootDir: '/example/node-tdd',
             },
             resolver: {
                 _options: {
@@ -115,13 +105,11 @@ const onTestFileResult = (fileName: string) => ({
                     moduleDirectories: ['node_modules'],
                     moduleNameMapper: [
                         {
-                            moduleName:
-                                '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/.spruce/$1',
+                            moduleName: '/example/node-tdd/build/$1',
                             regex: {},
                         },
                     ],
-                    rootDir:
-                        '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api',
+                    rootDir: '/example/node-tdd',
                 },
                 _moduleMap: {
                     duplicates: [],
@@ -134,8 +122,7 @@ const onTestFileResult = (fileName: string) => ({
                         ],
                     ],
                     mocks: [],
-                    rootDir:
-                        '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api',
+                    rootDir: '/example/node-tdd',
                 },
                 _moduleIDCache: {},
                 _moduleNameCache: {},
@@ -144,7 +131,7 @@ const onTestFileResult = (fileName: string) => ({
             },
         },
         duration: 0,
-        path: `/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/${fileName}`,
+        path: `/example/node-tdd/build/__tests__/${fileName}`,
     },
     testResult: {
         leaks: false,
@@ -170,7 +157,7 @@ const onTestFileResult = (fileName: string) => ({
             uncheckedKeys: [],
         },
         testFilePath:
-            '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/Database.test.js',
+            '/example/node-tdd/build/__tests__/implementation/Database.test.js',
         testResults: [
             {
                 ancestorTitles: [],
@@ -344,7 +331,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/CasualNameUtility.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/CasualNameUtility.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -417,7 +404,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/PhoneUtility.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/PhoneUtility.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -457,7 +444,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/TokenUtility.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/TokenUtility.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -552,7 +539,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/RoleStore.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/RoleStore.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -603,7 +590,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/PersonRoleStore.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/PersonRoleStore.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -720,7 +707,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/ContractValidator.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/ContractValidator.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -793,7 +780,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/MercuryServer.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/MercuryServer.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -844,7 +831,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/behavioral/UpdatingARole.test.js',
+                    '/example/node-tdd/build/__tests__/behavioral/UpdatingARole.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -898,7 +885,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/SkillGenerator.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/SkillGenerator.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],
@@ -949,7 +936,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/Users/taylorromero/Development/SpruceLabs/spruce-mercury-api/build/__tests__/implementation/Database.test.js',
+                    '/example/node-tdd/build/__tests__/implementation/Database.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],

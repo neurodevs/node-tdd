@@ -21,7 +21,7 @@ export default class ErrorStackTest extends AbstractModuleTest {
 	at new Promise (<anonymous>)`
     )
     @test(
-        'drops babel crap',
+        'drops spammy logs',
         `TypeError: Cannot read property 'map' of undefined
     at Object (~/example/src/databases/mongo.utilities.ts:21:17)
     at Array.forEach (<anonymous>)

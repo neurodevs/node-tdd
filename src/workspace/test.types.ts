@@ -15,7 +15,7 @@ export interface TestFileTest {
     duration: number
 }
 
-export interface SpruceTestFile {
+export interface TestFile {
     path: string
     status: TestResultStatus
     tests?: TestFileTest[]
@@ -30,5 +30,5 @@ export interface TestResults {
     totalTodo?: number
     totalTestFiles: number
     totalTestFilesComplete?: number
-    testFiles?: SpruceTestFile[]
+    testFiles?: TestFile[]
 }

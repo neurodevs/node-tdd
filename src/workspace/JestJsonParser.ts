@@ -5,7 +5,7 @@ import {
     retrocycle,
 } from '@sprucelabs/jest-json-reporter'
 import { escapeRegExp } from 'lodash-es'
-import { SpruceTestFile, TestResultStatus, TestResults } from './test.types.js'
+import { TestFile, TestResultStatus, TestResults } from './test.types.js'
 
 interface AggregatedResult {
     numTotalTestSuites: number
@@ -212,7 +212,7 @@ export default class JestJsonParser {
 
     private pullTestFileStatusFromTestResponse(
         result: JsonParserResult
-    ): SpruceTestFile['status'] {
+    ): TestFile['status'] {
         switch (result.status) {
             case 'onTestFileResult':
                 return this.pullTestFileResultStatus(result.testResult)
@@ -229,7 +229,7 @@ export default class JestJsonParser {
 
     private pullTestsFromTestFileResult(
         testResult: TestResult
-    ): SpruceTestFile['tests'] {
+    ): TestFile['tests'] {
         return testResult.testResults.map((test: AssertionResult) =>
             this.testCaseResultToTest(test)
         )

@@ -71,7 +71,12 @@ export default class TkTextWidget extends TkBaseWidget implements TextWidget {
             width: newFrame.width ?? oldFrame.width,
             height: newFrame.height ?? oldFrame.height,
         })
-        this.text.draw()
+
+        if (this.text.scrollable) {
+            this.text.scrollTo(null, this.text.scrollY)
+        } else {
+            this.text.draw()
+        }
     }
 
     public getText(): string {
@@ -91,6 +96,10 @@ export default class TkTextWidget extends TkBaseWidget implements TextWidget {
 
     public getScrollY() {
         return this.text.scrollY
+    }
+
+    public scrollToTop() {
+        this.text.scrollTo(null, 0)
     }
 
     public getScrollX() {

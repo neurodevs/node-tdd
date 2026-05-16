@@ -79,6 +79,47 @@ export default class WidgetsTest extends AbstractModuleTest {
         assert.isTruthy(column)
     }
 
+    @test()
+    protected static async setFrameResyncsScrollPositionOnScrollableWidget() {
+        const text = this.buildScrollableText() as any
+        let capturedArgs: any[] | undefined
+
+        text.text.scrollable = true
+        text.text.scrollTo = (...args: any[]) => {
+            capturedArgs = args
+        }
+
+        const currentScrollY = text.text.scrollY
+
+        text.setFrame({ left: 0, top: 0, width: 20, height: 10 })
+
+        assert.isEqualDeep(capturedArgs, [null, currentScrollY])
+    }
+
+    @test()
+    protected static async scrollToTopCallsScrollToWithZero() {
+        const text = this.buildScrollableText() as any
+        let capturedArgs: any[] | undefined
+
+        text.text.scrollTo = (...args: any[]) => {
+            capturedArgs = args
+        }
+
+        text.scrollToTop()
+
+        assert.isEqualDeep(capturedArgs, [null, 0])
+    }
+
+    private static buildScrollableText() {
+        return this.factory.Widget('text', {
+            left: 0,
+            top: 0,
+            width: 20,
+            height: 10,
+            isScrollEnabled: true,
+        })
+    }
+
     private static buildText() {
         return this.factory.Widget('text', {
             left: 0,

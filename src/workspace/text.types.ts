@@ -23,4 +23,5 @@ export interface TextWidget extends BaseWidget<TextEventContract> {
     setText(content: string): void
     getScrollX(): number
     getScrollY(): number
+    scrollToTop(): void
 }

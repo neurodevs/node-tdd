@@ -50,7 +50,7 @@ export default class TkTextWidget extends TkBaseWidget implements TextWidget {
 
         const line = this.text.content.split('\n')[y]
 
-        await (this as TextWidget).emit('click', {
+        this.emit('click', {
             text: line,
             row: y,
             column: x,

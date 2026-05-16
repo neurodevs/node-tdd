@@ -1,4 +1,5 @@
 import chokidar from 'chokidar'
+import { spawn } from 'child_process'
 import path from 'path'
 import CommandServiceImpl from './CommandService.js'
 import TestReporter from './TestReporter.js'
@@ -63,6 +64,12 @@ const reporter = new TestReporter({
     handleToggleSmartWatch: () => {
         currentWatchMode = currentWatchMode === 'smart' ? 'off' : 'smart'
         reporter.setWatchMode(currentWatchMode)
+    },
+    handleOpenTestFile: (filePath: string) => {
+        const fullPath = path.isAbsolute(filePath)
+            ? filePath
+            : path.join(cwd, 'src', '__tests__', filePath)
+        spawn('code', [fullPath], { detached: true, stdio: 'ignore' }).unref()
     },
 })
 

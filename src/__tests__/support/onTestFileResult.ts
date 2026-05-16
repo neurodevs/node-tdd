@@ -80,14 +80,7 @@ const onTestFileResult = (fileName: string) => ({
             },
             moduleMap: {
                 duplicates: [],
-                map: [
-                    [
-                        'spruce-mercury-api',
-                        {
-                            g: ['package.json', 1],
-                        },
-                    ],
-                ],
+                map: [],
                 mocks: [],
                 rootDir: '/example/node-tdd',
             },
@@ -113,14 +106,7 @@ const onTestFileResult = (fileName: string) => ({
                 },
                 _moduleMap: {
                     duplicates: [],
-                    map: [
-                        [
-                            'spruce-mercury-api',
-                            {
-                                g: ['package.json', 1],
-                            },
-                        ],
-                    ],
+                    map: [],
                     mocks: [],
                     rootDir: '/example/node-tdd',
                 },
@@ -780,7 +766,7 @@ const onTestFileResult = (fileName: string) => ({
                     uncheckedKeys: [],
                 },
                 testFilePath:
-                    '/example/node-tdd/build/__tests__/implementation/MercuryServer.test.js',
+                    '/example/build/__tests__/implementation/Server.test.js',
                 testResults: [
                     {
                         ancestorTitles: [],

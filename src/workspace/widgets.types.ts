@@ -10,7 +10,7 @@ export interface EventContract {
     eventSignatures: EventSignatureMap
 }
 
-export type MercuryEventEmitter<Contract extends EventContract = any> =
+export type ContractedEventEmitter<Contract extends EventContract = any> =
     EventEmitter & {
         emit(
             eventName: keyof Contract['eventSignatures'] & string,
@@ -36,7 +36,7 @@ export interface WidgetButton {
 
 export interface BaseWidget<
     Contract extends EventContract = any,
-> extends MercuryEventEmitter<Contract> {
+> extends ContractedEventEmitter<Contract> {
     type: string
     getId(): string | null
     getFrame(): WidgetFrameCalculated

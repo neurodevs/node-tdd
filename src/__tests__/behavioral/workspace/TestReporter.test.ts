@@ -251,6 +251,89 @@ export default class TestReporterTest extends AbstractModuleTest {
         )
     }
 
+    @test()
+    protected static async createsDropInMenuWidgetOnStart() {
+        const reporter = this.TestReporter() as any
+        let capturedMenuBarOptions: any
+
+        const fakeWidget: any = new Proxy(
+            {},
+            {
+                get: (_t, prop: string) => {
+                    if (prop === 'getFrame') {
+                        return () => ({
+                            left: 0,
+                            top: 0,
+                            width: 100,
+                            height: 50,
+                        })
+                    }
+                    if (prop === 'getChildById') {
+                        return () => null
+                    }
+                    if (prop === 'getRows') {
+                        return () => [{}]
+                    }
+                    if (prop === 'getFocusedWidget') {
+                        return () => null
+                    }
+                    if (prop === 'on') {
+                        return () => fakeWidget
+                    }
+                    return () => fakeWidget
+                },
+            }
+        )
+
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                if (type === 'menuBar') {
+                    capturedMenuBarOptions = options
+                }
+                return fakeWidget
+            },
+        }
+
+        await reporter.start()
+
+        assert.isEqualDeep(capturedMenuBarOptions, {
+            parent: reporter.window,
+            left: 0,
+            top: 0,
+            shouldLockWidthWithParent: true,
+            items: [
+                {
+                    label: 'Restart   ',
+                    value: 'restart',
+                },
+                {
+                    label: 'Debug    ',
+                    value: 'toggleDebug',
+                },
+                {
+                    label: 'Not Watching      ',
+                    value: 'watchDropdown',
+                    items: [
+                        {
+                            label: 'Watch all',
+                            value: 'toggleStandardWatch',
+                        },
+                        {
+                            label: 'Smart watch',
+                            value: 'toggleSmartWatch',
+                        },
+                    ],
+                },
+                {
+                    label: 'Quit',
+                    value: 'quit',
+                },
+            ],
+        })
+
+        clearInterval(reporter.updateInterval)
+    }
+
     private static TestReporter(options?: TestReporterOptions) {
         return new TestReporter(options) as any
     }

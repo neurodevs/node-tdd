@@ -221,7 +221,7 @@ export default class TestReporter {
                     value: 'toggleDebug',
                 },
                 {
-                    label: 'Not Watching   ',
+                    label: 'Not Watching      ',
                     value: 'watchDropdown',
                     items: [
                         {

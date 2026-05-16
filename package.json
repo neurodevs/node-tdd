@@ -1,6 +1,6 @@
 {
   "name": "@neurodevs/node-tdd",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A Node.js framework for test-driven development (TDD)",
   "type": "module",
   "keywords": [

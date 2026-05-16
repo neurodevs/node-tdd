@@ -44,7 +44,6 @@ export default class TestReporter {
     private handleStartStop?: () => void
     private handleRestart?: () => void
     private handleQuit?: () => void
-    private handleRerunTestFile?: (fileName: string) => void
     private handleFilterChange?: (pattern?: string) => void
     private handleOpenTestFile?: (testFile: string) => void
     private handleToggleDebug?: () => void
@@ -58,7 +57,6 @@ export default class TestReporter {
         this.handleRestart = options?.handleRestart
         this.handleStartStop = options?.handleStartStop
         this.handleQuit = options?.handleQuit
-        this.handleRerunTestFile = options?.handleRerunTestFile
         this.handleOpenTestFile = options?.handleOpenTestFile
         this.handleFilterChange = options?.handleFilterPatternChange
         this.status = options?.status ?? 'ready'
@@ -443,29 +441,18 @@ export default class TestReporter {
 
         const open = this.widgets.Widget('button', {
             parent: this.selectTestPopup,
-            left: 1,
+            left: 11,
             top: 6,
             text: 'Open',
         })
 
-        const rerun = this.widgets.Widget('button', {
-            parent: this.selectTestPopup,
-            left: 20,
-            top: 6,
-            text: 'Test',
-        })
-
         const cancel = this.widgets.Widget('button', {
             parent: this.selectTestPopup,
-            left: 37,
+            left: 30,
             top: 6,
-            text: 'Nevermind',
+            text: 'Cancel',
         })
 
-        void rerun.on('click', () => {
-            this.handleRerunTestFile?.(testFile)
-            this.closeSelectTestPopup()
-        })
         void cancel.on('click', this.closeSelectTestPopup.bind(this))
         void open.on('click', () => {
             this.openTestFile(testFile)

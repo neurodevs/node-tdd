@@ -492,6 +492,96 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async createsOpenButtonInSelectTestPopup() {
+        const reporter = this.TestReporter() as any
+        const capturedWidgets: { type: string; options: any }[] = []
+        const popupWidth = 50
+
+        const fakePopup = {
+            getFrame: () => ({ width: popupWidth }),
+            on: () => fakePopup,
+        }
+
+        const fakeButton = { on: () => fakeButton }
+
+        reporter.window = {}
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                capturedWidgets.push({ type, options })
+                if (type === 'popup') {
+                    return fakePopup
+                }
+                return fakeButton
+            },
+        }
+
+        reporter.dropInSelectTestPopup({
+            testFile: 'src/foo/bar.test.ts',
+            row: 10,
+            column: 30,
+        })
+
+        const entry = capturedWidgets.find(
+            (o) => o.type === 'button' && o.options?.text === 'Open'
+        )
+
+        assert.isTruthy(entry, 'Open button must be created in select test popup')
+
+        const { parent: _parent, ...restOptions } = entry!.options
+
+        assert.isEqualDeep(restOptions, {
+            left: 11,
+            top: 6,
+            text: 'Open',
+        })
+    }
+
+    @test()
+    protected static async createsCancelButtonInSelectTestPopup() {
+        const reporter = this.TestReporter() as any
+        const capturedWidgets: { type: string; options: any }[] = []
+        const popupWidth = 50
+
+        const fakePopup = {
+            getFrame: () => ({ width: popupWidth }),
+            on: () => fakePopup,
+        }
+
+        const fakeButton = { on: () => fakeButton }
+
+        reporter.window = {}
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                capturedWidgets.push({ type, options })
+                if (type === 'popup') {
+                    return fakePopup
+                }
+                return fakeButton
+            },
+        }
+
+        reporter.dropInSelectTestPopup({
+            testFile: 'src/foo/bar.test.ts',
+            row: 10,
+            column: 30,
+        })
+
+        const entry = capturedWidgets.find(
+            (o) => o.type === 'button' && o.options?.text === 'Cancel'
+        )
+
+        assert.isTruthy(entry, 'Cancel button must be created in select test popup')
+
+        const { parent: _parent, ...restOptions } = entry!.options
+
+        assert.isEqualDeep(restOptions, {
+            left: 30,
+            top: 6,
+            text: 'Cancel',
+        })
+    }
+
+    @test()
     protected static async scrollsToTopWhenStatusSetToStopped() {
         const reporter = this.TestReporter() as any
         let scrollToTopCalled = false

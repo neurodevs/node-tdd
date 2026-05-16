@@ -256,6 +256,7 @@ export default class TestReporter {
             this.setStatusLabel('Starting...')
         } else if (this.status === 'stopped') {
             this.refreshResults()
+            this.testLog?.scrollToTop()
             this.setStatusLabel('')
         } else if (this.status === 'running') {
             this.setStatusLabel('Running tests...')

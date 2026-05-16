@@ -443,6 +443,27 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async scrollsToTopWhenStatusSetToStopped() {
+        const reporter = this.TestReporter() as any
+        let scrollToTopCalled = false
+
+        reporter.menu = this.fakeMenu({})
+        reporter.bottomLayout = { updateLayout: () => {} }
+        reporter.statusBar = { setText: () => {} }
+        reporter.testLog = {
+            scrollToTop: () => {
+                scrollToTopCalled = true
+            },
+            setText: () => {},
+            getText: () => '',
+        }
+
+        reporter.setStatus('stopped')
+
+        assert.isTrue(scrollToTopCalled, 'scrollToTop must be called when status is stopped')
+    }
+
+    @test()
     protected static async getFileForLineReturnsCorrectFileForRow() {
         const reporter = this.TestReporter() as any
 

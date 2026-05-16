@@ -481,13 +481,17 @@ export default class TestReporter {
 
         for (const file of this.lastResults.testFiles ?? []) {
             const minRow = line
-            const maxRow = line + (file.tests ?? []).length
+            const lineCount =
+                1 +
+                (file.tests ?? []).length +
+                (file.status === 'running' ? 1 : 0)
+            const maxRow = line + lineCount - 1
 
             if (row >= minRow && row <= maxRow) {
                 return file.path
             }
 
-            line = maxRow
+            line = maxRow + 1
         }
 
         return undefined

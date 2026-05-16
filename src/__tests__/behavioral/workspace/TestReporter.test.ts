@@ -442,6 +442,35 @@ export default class TestReporterTest extends AbstractModuleTest {
         clearInterval(reporter.updateInterval)
     }
 
+    @test()
+    protected static async getFileForLineReturnsCorrectFileForRow() {
+        const reporter = this.TestReporter() as any
+
+        reporter.lastResults = {
+            testFiles: [
+                {
+                    path: 'file1.ts',
+                    status: 'passed',
+                    tests: [{ name: 'test1' }, { name: 'test2' }],
+                },
+                {
+                    path: 'file2.ts',
+                    status: 'passed',
+                    tests: [{ name: 'test3' }],
+                },
+            ],
+        }
+
+        reporter.testLog = { getScrollY: () => 0 }
+
+        // file1: rows 0–2 (header + 2 tests), file2: rows 3–4 (header + 1 test)
+        assert.isEqual(reporter.getFileForLine(0), 'file1.ts') // header
+        assert.isEqual(reporter.getFileForLine(2), 'file1.ts') // last test
+        assert.isEqual(reporter.getFileForLine(3), 'file2.ts') // file2 header
+        assert.isEqual(reporter.getFileForLine(4), 'file2.ts') // file2 last test
+        assert.isEqual(reporter.getFileForLine(5), undefined) // out of range
+    }
+
     private static fakeMenu(captured: Record<string, string>) {
         return {
             setTextForItem: (key: string, label: string) => {

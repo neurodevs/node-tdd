@@ -544,6 +544,32 @@ export default class TestReporterTest extends AbstractModuleTest {
         assert.isEqual(reporter.getFileForLine(5), undefined) // out of range
     }
 
+    @test()
+    protected static async sortsFailedFilesToTopWhenStopped() {
+        const reporter = this.TestReporter() as any
+
+        reporter.status = 'stopped'
+        reporter.lastResults = { customErrors: [] }
+
+        const results = {
+            testFiles: [
+                { path: 'passing.ts', status: 'passed', tests: [] },
+                { path: 'failing.ts', status: 'failed', tests: [] },
+            ],
+        }
+
+        const { logContent } = reporter.resultsToLogContents(results)
+
+        const failingIdx = logContent.indexOf('failing.ts')
+        const passingIdx = logContent.indexOf('passing.ts')
+
+        assert.isBelow(
+            failingIdx,
+            passingIdx,
+            'Failed file must appear before passing file when stopped'
+        )
+    }
+
     private static fakeMenu(captured: Record<string, string>) {
         return {
             setTextForItem: (key: string, label: string) => {

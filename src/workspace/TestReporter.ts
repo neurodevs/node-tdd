@@ -662,7 +662,17 @@ export default class TestReporter {
         let logContent = ''
         let errorContent = ''
 
-        results.testFiles?.forEach((file) => {
+        const files = [...(results.testFiles ?? [])]
+
+        if (this.status === 'stopped') {
+            files.sort((a, b) => {
+                const aFailed = a.status === 'failed' ? 0 : 1
+                const bFailed = b.status === 'failed' ? 0 : 1
+                return aFailed - bFailed
+            })
+        }
+
+        files.forEach((file) => {
             logContent += this.errorLogItemGenerator.generateLogItemForFile(
                 file,
                 this.status

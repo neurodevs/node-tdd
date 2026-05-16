@@ -1,0 +1,5 @@
+*
+!build/
+!build/**
+build/__tests__/
+build/__tests__/**

@@ -252,6 +252,56 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async setWatchModeSetsSmartWatchLabel() {
+        const reporter = this.TestReporter()
+        const captured: Record<string, string> = {}
+        reporter.menu = this.fakeMenu(captured)
+        reporter.setWatchMode('smart')
+        assert.isEqual(
+            captured['watchDropdown'],
+            'Smart Watch    ^k^#^g • ^'
+        )
+    }
+
+    @test()
+    protected static async setWatchModeSetsStandardWatchLabel() {
+        const reporter = this.TestReporter()
+        const captured: Record<string, string> = {}
+        reporter.menu = this.fakeMenu(captured)
+        reporter.setWatchMode('standard')
+        assert.isEqual(
+            captured['watchDropdown'],
+            'Standard Watch ^k^#^g • ^'
+        )
+    }
+
+    @test()
+    protected static async setWatchModeSetsNotWatchingLabel() {
+        const reporter = this.TestReporter()
+        const captured: Record<string, string> = {}
+        reporter.menu = this.fakeMenu(captured)
+        reporter.setWatchMode('off')
+        assert.isEqual(
+            captured['watchDropdown'],
+            'Not Watching   ^w^#^r • ^'
+        )
+    }
+
+    @test()
+    protected static async setWatchModeSkipsLabelUpdateWhenCountdownActive() {
+        const reporter = this.TestReporter()
+        const captured: Record<string, string> = {}
+        reporter.menu = this.fakeMenu(captured)
+        reporter.countDownTimeInterval = setInterval(() => {}, 10000)
+        reporter.setWatchMode('smart')
+        clearInterval(reporter.countDownTimeInterval)
+        assert.isUndefined(
+            captured['watchDropdown'],
+            'label must not update during countdown'
+        )
+    }
+
+    @test()
     protected static async createsDropInMenuWidgetOnStart() {
         const reporter = this.TestReporter() as any
         let capturedMenuBarOptions: any
@@ -332,6 +382,14 @@ export default class TestReporterTest extends AbstractModuleTest {
         })
 
         clearInterval(reporter.updateInterval)
+    }
+
+    private static fakeMenu(captured: Record<string, string>) {
+        return {
+            setTextForItem: (key: string, label: string) => {
+                captured[key] = label
+            },
+        }
     }
 
     private static TestReporter(options?: TestReporterOptions) {

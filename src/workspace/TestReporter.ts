@@ -86,9 +86,10 @@ export default class TestReporter {
     public setWatchMode(watchMode: WatchMode) {
         this.watchMode = watchMode
         if (!this.countDownTimeInterval) {
-            let label = watchMode === 'smart' ? 'Smart Watch' : 'Standard Watch'
+            let label =
+                watchMode === 'smart' ? 'Smart Watch   ' : 'Standard Watch'
             if (watchMode === 'off') {
-                label = 'Not Watching'
+                label = 'Not Watching  '
             }
             this.setWatchLabel(label)
         }

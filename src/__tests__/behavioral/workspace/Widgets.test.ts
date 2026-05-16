@@ -1,4 +1,4 @@
-import AbstractModuleTest from '../../../impl/AbstractModuleTest.js'
+import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
 import assert from '../../../utilities/assert.js'
 import test from '../../../utilities/decorators.js'
 import WidgetFactory from '../../../workspace/WidgetFactory.js'

@@ -1,6 +1,6 @@
-import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
-import test from '../../utilities/decorators.js'
-import assert from '../../utilities/assert.js'
+import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
+import test from '../../../utilities/decorators.js'
+import assert from '../../../utilities/assert.js'
 
 export default class AbstractModuleTestClassTest extends AbstractModuleTest {
     protected static async beforeEach() {

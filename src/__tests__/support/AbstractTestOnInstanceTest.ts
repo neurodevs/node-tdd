@@ -1,4 +1,4 @@
-import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
 
 export default abstract class AbstractTestOnInstanceTest extends AbstractModuleTest {
     public static beforeAllCount = 0

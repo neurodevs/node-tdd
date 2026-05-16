@@ -1,6 +1,6 @@
 import assert from '../../../utilities/assert.js'
 import test, { suite } from '../../../utilities/decorators.js'
-import AbstractModuleTest from '../../../impl/AbstractModuleTest.js'
+import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
 
 import TestDecoratorResolver from '../../../utilities/TestDecoratorResolver.js'
 

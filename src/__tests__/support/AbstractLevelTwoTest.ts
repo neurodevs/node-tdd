@@ -1,4 +1,4 @@
-import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
 
 export default abstract class AbstractBeforeAllLevelTwoTest extends AbstractModuleTest {
     protected static wasBeforeAllLevelTwoCalled = false

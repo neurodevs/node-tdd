@@ -1,9 +1,9 @@
-import AbstractModuleTest from './impl/AbstractModuleTest.js'
+import AbstractModuleTest from './utilities/AbstractModuleTest.js'
 
 export default AbstractModuleTest
 
-export { default as AbstractModuleTest } from './impl/AbstractModuleTest.js'
-export * from './impl/AbstractModuleTest.js'
+export { default as AbstractModuleTest } from './utilities/AbstractModuleTest.js'
+export * from './utilities/AbstractModuleTest.js'
 
 export { default as test } from './utilities/decorators.js'
 export * from './utilities/decorators.js'

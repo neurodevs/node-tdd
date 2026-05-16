@@ -1,5 +1,5 @@
 import assert from '../../utilities/assert.js'
-import AbstractModuleTest from '../../impl/AbstractModuleTest.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
 
 export default abstract class AbstractTestOnInstanceWithHooksTest extends AbstractModuleTest {
     public static beforeAllCount = 0

@@ -525,7 +525,10 @@ export default class TestReporterTest extends AbstractModuleTest {
             (o) => o.type === 'button' && o.options?.text === 'Open'
         )
 
-        assert.isTruthy(entry, 'Open button must be created in select test popup')
+        assert.isTruthy(
+            entry,
+            'Open button must be created in select test popup'
+        )
 
         const { parent: _parent, ...restOptions } = entry!.options
 
@@ -570,7 +573,10 @@ export default class TestReporterTest extends AbstractModuleTest {
             (o) => o.type === 'button' && o.options?.text === 'Cancel'
         )
 
-        assert.isTruthy(entry, 'Cancel button must be created in select test popup')
+        assert.isTruthy(
+            entry,
+            'Cancel button must be created in select test popup'
+        )
 
         const { parent: _parent, ...restOptions } = entry!.options
 
@@ -579,6 +585,30 @@ export default class TestReporterTest extends AbstractModuleTest {
             top: 6,
             text: 'Cancel',
         })
+    }
+
+    @test()
+    protected static async clearsErrorLogWhenStatusSetToRunning() {
+        const reporter = this.TestReporter() as any
+        let setTextCalledWith: string | undefined
+
+        reporter.menu = this.fakeMenu({})
+        reporter.bottomLayout = { updateLayout: () => {} }
+        reporter.statusBar = { setText: () => {} }
+        reporter.testLog = { setText: () => {}, getText: () => '' }
+        reporter.errorLog = {
+            setText: (text: string) => {
+                setTextCalledWith = text
+            },
+        }
+
+        reporter.setStatus('running')
+
+        assert.isEqual(
+            setTextCalledWith,
+            '',
+            'errorLog must be cleared when status is set to running'
+        )
     }
 
     @test()

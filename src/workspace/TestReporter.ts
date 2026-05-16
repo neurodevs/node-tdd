@@ -257,6 +257,7 @@ export default class TestReporter {
             this.testLog?.scrollToTop()
             this.setStatusLabel('')
         } else if (this.status === 'running') {
+            this.reset()
             this.setStatusLabel('Running tests...')
         }
     }
@@ -821,6 +822,7 @@ export default class TestReporter {
 
     public reset() {
         this.testLog.setText('')
+        this.errorLog?.setText('')
         this.lastResults = {
             totalTestFiles: 0,
             customErrors: [],

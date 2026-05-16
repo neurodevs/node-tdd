@@ -443,6 +443,55 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async createsSelectTestPopupWidgetOnStart() {
+        const reporter = this.TestReporter() as any
+        const capturedTextOptions: { type: string; options: any }[] = []
+        const popupWidth = 50
+
+        const fakePopup = {
+            getFrame: () => ({ width: popupWidth }),
+            on: () => fakePopup,
+        }
+
+        const fakeButton = { on: () => fakeButton }
+
+        reporter.window = {}
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                capturedTextOptions.push({ type, options })
+                if (type === 'popup') {
+                    return fakePopup
+                }
+                return fakeButton
+            },
+        }
+
+        reporter.dropInSelectTestPopup({
+            testFile: 'src/foo/bar.test.ts',
+            row: 10,
+            column: 30,
+        })
+
+        const entry = capturedTextOptions.find(
+            (o) =>
+                o.type === 'text' &&
+                o.options?.text?.startsWith('Selected file:')
+        )
+
+        assert.isTruthy(entry, 'popup text widget must be created')
+
+        const { parent: _parent, ...restOptions } = entry!.options
+
+        assert.isEqualDeep(restOptions, {
+            left: 1,
+            top: 1,
+            height: 4,
+            width: popupWidth - 2,
+            text: 'Selected file:\n\nsrc/foo/bar.test.ts',
+        })
+    }
+
+    @test()
     protected static async scrollsToTopWhenStatusSetToStopped() {
         const reporter = this.TestReporter() as any
         let scrollToTopCalled = false
@@ -460,7 +509,10 @@ export default class TestReporterTest extends AbstractModuleTest {
 
         reporter.setStatus('stopped')
 
-        assert.isTrue(scrollToTopCalled, 'scrollToTop must be called when status is stopped')
+        assert.isTrue(
+            scrollToTopCalled,
+            'scrollToTop must be called when status is stopped'
+        )
     }
 
     @test()

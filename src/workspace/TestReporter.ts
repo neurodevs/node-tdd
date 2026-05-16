@@ -438,7 +438,7 @@ export default class TestReporter {
             top: 1,
             height: 4,
             width: this.selectTestPopup.getFrame().width - 2,
-            text: `What do you wanna do with:\n\n${testFile}`,
+            text: `Selected file:\n\n${testFile}`,
         })
 
         const open = this.widgets.Widget('button', {

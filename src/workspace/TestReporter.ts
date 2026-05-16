@@ -332,22 +332,21 @@ export default class TestReporter {
     }
 
     private dropInTestLog() {
-        const parent = this.bottomLayout.getChildById('results')
+        const parent = this.bottomLayout.getChildById('results')!
 
-        if (parent) {
-            this.testLog = this.widgets.Widget('text', {
-                parent,
-                isScrollEnabled: true,
-                left: 0,
-                top: 0,
-                height: '100%',
-                width: '100%',
-                shouldLockHeightWithParent: true,
-                shouldLockWidthWithParent: true,
-            })
+        this.testLog = this.widgets.Widget('text', {
+            parent,
+            isScrollEnabled: true,
+            wordWrap: false,
+            left: 0,
+            top: 0,
+            height: '100%',
+            width: '100%',
+            shouldLockHeightWithParent: true,
+            shouldLockWidthWithParent: true,
+        })
 
-            void this.testLog.on('click', this.handleClickTestLog.bind(this))
-        }
+        void this.testLog.on('click', this.handleClickTestLog.bind(this))
     }
 
     private async handleClickTestLog(payload: { row: number; column: number }) {

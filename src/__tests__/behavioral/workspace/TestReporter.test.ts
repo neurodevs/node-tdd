@@ -257,10 +257,7 @@ export default class TestReporterTest extends AbstractModuleTest {
         const captured: Record<string, string> = {}
         reporter.menu = this.fakeMenu(captured)
         reporter.setWatchMode('smart')
-        assert.isEqual(
-            captured['watchDropdown'],
-            'Smart Watch    ^k^#^g • ^'
-        )
+        assert.isEqual(captured['watchDropdown'], 'Smart Watch    ^k^#^g • ^')
     }
 
     @test()
@@ -269,10 +266,7 @@ export default class TestReporterTest extends AbstractModuleTest {
         const captured: Record<string, string> = {}
         reporter.menu = this.fakeMenu(captured)
         reporter.setWatchMode('standard')
-        assert.isEqual(
-            captured['watchDropdown'],
-            'Standard Watch ^k^#^g • ^'
-        )
+        assert.isEqual(captured['watchDropdown'], 'Standard Watch ^k^#^g • ^')
     }
 
     @test()
@@ -281,10 +275,7 @@ export default class TestReporterTest extends AbstractModuleTest {
         const captured: Record<string, string> = {}
         reporter.menu = this.fakeMenu(captured)
         reporter.setWatchMode('off')
-        assert.isEqual(
-            captured['watchDropdown'],
-            'Not Watching   ^w^#^r • ^'
-        )
+        assert.isEqual(captured['watchDropdown'], 'Not Watching   ^w^#^r • ^')
     }
 
     @test()
@@ -380,6 +371,73 @@ export default class TestReporterTest extends AbstractModuleTest {
                 },
             ],
         })
+
+        clearInterval(reporter.updateInterval)
+    }
+
+    @test()
+    protected static async createsTestLogWidgetOnStart() {
+        const reporter = this.TestReporter() as any
+        let capturedTextOptions: { type: string; options: any }[] = []
+
+        const fakeWidget: any = new Proxy(
+            {},
+            {
+                get: (_t, prop: string) => {
+                    if (prop === 'getFrame') {
+                        return () => ({
+                            left: 0,
+                            top: 0,
+                            width: 100,
+                            height: 50,
+                        })
+                    }
+                    if (prop === 'getChildById') {
+                        return () => null
+                    }
+                    if (prop === 'getRows') {
+                        return () => [{}]
+                    }
+                    if (prop === 'getFocusedWidget') {
+                        return () => null
+                    }
+                    if (prop === 'on') {
+                        return () => fakeWidget
+                    }
+                    return () => fakeWidget
+                },
+            }
+        )
+
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                capturedTextOptions.push({ type, options })
+                return fakeWidget
+            },
+        }
+
+        await reporter.start()
+
+        const expectedOptions = {
+            isScrollEnabled: true,
+            wordWrap: false,
+            left: 0,
+            top: 0,
+            height: '100%',
+            width: '100%',
+            shouldLockHeightWithParent: true,
+            shouldLockWidthWithParent: true,
+        } as any
+
+        const entry = capturedTextOptions.find(
+            (o) =>
+                o.type === 'text' &&
+                Object.keys(expectedOptions).every(
+                    (k) => o.options[k] === expectedOptions[k]
+                )
+        )
+
+        assert.isTruthy(entry, 'Test log widget must be created on start')
 
         clearInterval(reporter.updateInterval)
     }

@@ -1,9 +1,13 @@
-import { END_DIVIDER, START_DIVIDER } from '@sprucelabs/jest-json-reporter'
 import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
 import assert from '../../../utilities/assert.js'
 import test from '../../../utilities/decorators.js'
 import JestJsonParser from '../../../workspace/JestJsonParser.js'
 import onTestFileResult from '../../support/onTestFileResult.js'
+
+import {
+    END_DIVIDER,
+    START_DIVIDER,
+} from '../../../jest-json-reporter/JsonReporter.js'
 
 type JsonResultKeys = 'onRunStart' | 'onTestFileStart' | 'onTestFileResult'
 

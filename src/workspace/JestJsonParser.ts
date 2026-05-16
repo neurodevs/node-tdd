@@ -1,10 +1,11 @@
+import { escapeRegExp } from 'lodash-es'
+
 import {
     AssertionResult,
     END_DIVIDER,
     START_DIVIDER,
     retrocycle,
-} from '@sprucelabs/jest-json-reporter'
-import { escapeRegExp } from 'lodash-es'
+} from '../jest-json-reporter/JsonReporter.js'
 import { TestFile, TestResultStatus, TestResults } from './test.types.js'
 
 interface AggregatedResult {

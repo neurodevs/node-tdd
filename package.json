@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "@neurodevs/generate-id": "^1.1.2",
-    "@sprucelabs/jest-json-reporter": "^10.0.33",
     "chalk": "^5.6.2",
     "chokidar": "^5.0.0",
     "deep-equal": "^2.2.3",

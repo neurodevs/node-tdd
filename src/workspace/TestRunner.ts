@@ -39,7 +39,11 @@ export default class TestRunner extends EventEmitter {
                 '"'
             )
         }
-        const command = `node --experimental-vm-modules --unhandled-rejections=strict ${debugArgs} ${jestPath} --reporters="@sprucelabs/jest-json-reporter" --testRunner="jest-circus/runner" --passWithNoTests ${
+        const reporterPath = pathUtil.resolve(
+            pathUtil.dirname(new URL(import.meta.url).pathname),
+            '../jest-json-reporter/JsonReporter.js'
+        )
+        const command = `node --experimental-vm-modules --unhandled-rejections=strict ${debugArgs} ${jestPath} --reporters="${reporterPath}" --testRunner="jest-circus/runner" --passWithNoTests ${
             pattern ? escapeShell(pattern) : ''
         }`
 

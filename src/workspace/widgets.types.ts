@@ -42,7 +42,7 @@ export interface BaseWidget<
     getFrame(): WidgetFrameCalculated
     setFrame(frame: Partial<WidgetFrame>): void
     getParent(): BaseWidget | null
-    destroy(): Promise<void>
+    destroy(): void
     getChildById(id?: string): BaseWidget | null
     getChildren(): BaseWidget[]
     addChild(child: BaseWidget): void

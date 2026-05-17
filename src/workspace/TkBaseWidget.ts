@@ -195,7 +195,7 @@ export default abstract class TkBaseWidget<Contract extends EventContract = any>
         }
     }
 
-    public async destroy() {
+    public destroy() {
         this.getTermKitElement()?.destroy()
         this.getParent()?.removeChild(this as BaseWidget)
     }

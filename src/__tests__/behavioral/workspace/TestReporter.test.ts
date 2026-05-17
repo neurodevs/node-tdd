@@ -746,6 +746,82 @@ export default class TestReporterTest extends AbstractModuleTest {
         assert.isEqual(rowHeights[1], '40%', 'row 1 must be 40% when errors present')
     }
 
+    @test()
+    protected static async setsAllPassingLabelWhenAllTestsPass() {
+        const reporter = this.TestReporter()
+        let capturedLabel: string | undefined
+        reporter.bar = { setLabel: (label: string) => { capturedLabel = label }, setProgress: () => {} }
+
+        reporter.updateProgressBar({
+            totalTestFiles: 1,
+            totalTestFilesComplete: 1,
+            testFiles: [
+                {
+                    tests: [
+                        { status: 'passed', duration: 100 },
+                        { status: 'passed', duration: 200 },
+                    ],
+                },
+            ],
+        })
+
+        assert.isEqual(
+            capturedLabel,
+            '100% tests passed — 2/2 passed in 300ms'
+        )
+    }
+
+    @test()
+    protected static async setsFailingLabelWithSingularWhenOneTestFails() {
+        const reporter = this.TestReporter()
+        let capturedLabel: string | undefined
+        reporter.bar = { setLabel: (label: string) => { capturedLabel = label }, setProgress: () => {} }
+
+        reporter.updateProgressBar({
+            totalTestFiles: 1,
+            totalTestFilesComplete: 1,
+            testFiles: [
+                {
+                    tests: [
+                        { status: 'passed', duration: 100 },
+                        { status: 'failed', duration: 200 },
+                    ],
+                },
+            ],
+        })
+
+        assert.isEqual(
+            capturedLabel,
+            '1 test failed — 1/2 passed in 300ms'
+        )
+    }
+
+    @test()
+    protected static async setsFailingLabelWithPluralWhenMultipleTestsFail() {
+        const reporter = this.TestReporter()
+        let capturedLabel: string | undefined
+        reporter.bar = { setLabel: (label: string) => { capturedLabel = label }, setProgress: () => {} }
+
+        reporter.updateProgressBar({
+            totalTestFiles: 1,
+            totalTestFilesComplete: 1,
+            testFiles: [
+                {
+                    tests: [
+                        { status: 'passed', duration: 100 },
+                        { status: 'failed', duration: 200 },
+                        { status: 'failed', duration: 50 },
+                    ],
+                },
+            ],
+        })
+
+        assert.isEqual(
+            capturedLabel,
+            '2 tests failed — 1/3 passed in 350ms'
+        )
+    }
+
     private static fakeMenu(captured: Record<string, string>) {
         return {
             setTextForItem: (key: string, label: string) => {

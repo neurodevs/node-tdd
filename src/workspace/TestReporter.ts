@@ -738,10 +738,11 @@ export default class TestReporter {
                 const { percent, totalTests, totalPassedTests, totalTime } =
                     this.generateProgressStats(results)
 
+                const totalFailingTests = totalTests - totalPassedTests
                 this.bar.setLabel(
-                    `Finished! ${totalPassedTests} of ${totalTests} (${percent}%) passed in ${durationUtil.msToFriendly(
-                        totalTime
-                    )}.${percent < 100 ? ` Don't give up!` : ''}`
+                    percent === 100
+                        ? `100% tests passed — ${totalPassedTests}/${totalTests} passed in ${durationUtil.msToFriendly(totalTime)}`
+                        : `${totalFailingTests} test${totalFailingTests > 1 ? 's' : ''} failed — ${totalPassedTests}/${totalTests} passed in ${durationUtil.msToFriendly(totalTime)}`
                 )
             } else {
                 this.bar.setLabel(

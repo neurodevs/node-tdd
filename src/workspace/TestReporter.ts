@@ -45,7 +45,7 @@ export default class TestReporter {
     private handleRestart?: () => void
     private handleQuit?: () => void
     private handleFilterChange?: (pattern?: string) => void
-    private handleOpenTestFile?: (testFile: string) => void
+    private handleOpenTestFile?: (testFile: string, testName?: string) => void
     private handleToggleDebug?: () => void
     private handletoggleStandardWatch?: () => void
     private handleToggleSmartWatch?: () => any
@@ -350,13 +350,18 @@ export default class TestReporter {
     }
 
     private async handleClickTestLog(payload: { row: number; column: number }) {
-        const testFile = this.getFileForLine(payload.row)
+        const info = this.getFileInfoForLine(payload.row)
         const { row, column } = payload
 
         this.closeSelectTestPopup()
 
-        if (testFile) {
-            this.dropInSelectTestPopup({ testFile, column, row })
+        if (info) {
+            this.dropInSelectTestPopup({
+                testFile: info.file,
+                testName: info.testName,
+                column,
+                row,
+            })
         }
     }
 
@@ -418,69 +423,121 @@ export default class TestReporter {
 
     private dropInSelectTestPopup(options: {
         testFile: string
+        testName?: string
         column: number
         row: number
     }) {
-        const { testFile, row, column } = options
+        const { testFile, testName, row, column } = options
+        const hasTest = testName !== undefined
+        const popupHeight = hasTest ? 12 : 10
 
         this.selectTestPopup = this.widgets.Widget('popup', {
             parent: this.window,
             left: Math.max(1, column - 25),
             top: Math.max(4, row - 2),
-            width: 50,
-            height: 10,
+            width: 56,
+            height: popupHeight,
         })
+
+        const popupWidth = this.selectTestPopup.getFrame().width
+
+        let infoText = `File:\n${testFile}`
+        if (hasTest) {
+            infoText += `\n\nTest:\n${testName}`
+        }
 
         this.widgets.Widget('text', {
             parent: this.selectTestPopup,
             left: 1,
             top: 1,
-            height: 4,
-            width: this.selectTestPopup.getFrame().width - 2,
-            text: `Selected file:\n\n${testFile}`,
+            height: popupHeight - 4,
+            width: popupWidth - 2,
+            text: infoText,
+            wordWrap: true,
         })
 
-        const open = this.widgets.Widget('button', {
-            parent: this.selectTestPopup,
-            left: 11,
-            top: 6,
-            text: 'Open',
-        })
+        const buttonTop = popupHeight - 3
 
-        const cancel = this.widgets.Widget('button', {
-            parent: this.selectTestPopup,
-            left: 30,
-            top: 6,
-            text: 'Cancel',
-        })
-
-        void cancel.on('click', this.closeSelectTestPopup.bind(this))
-        void open.on('click', () => {
-            this.openTestFile(testFile)
-        })
+        if (hasTest) {
+            const openFile = this.widgets.Widget('button', {
+                parent: this.selectTestPopup,
+                left: 2,
+                top: buttonTop,
+                text: 'Open File',
+            })
+            const openTest = this.widgets.Widget('button', {
+                parent: this.selectTestPopup,
+                left: 16,
+                top: buttonTop,
+                text: 'Open Test',
+            })
+            const cancel = this.widgets.Widget('button', {
+                parent: this.selectTestPopup,
+                left: 30,
+                top: buttonTop,
+                text: 'Cancel',
+            })
+            void openFile.on('click', () => {
+                this.openTestFile(testFile)
+            })
+            void openTest.on('click', () => {
+                this.openTestFile(testFile, testName)
+            })
+            void cancel.on('click', this.closeSelectTestPopup.bind(this))
+        } else {
+            const openFile = this.widgets.Widget('button', {
+                parent: this.selectTestPopup,
+                left: 14,
+                top: buttonTop,
+                text: 'Open File',
+            })
+            const cancel = this.widgets.Widget('button', {
+                parent: this.selectTestPopup,
+                left: 28,
+                top: buttonTop,
+                text: 'Cancel',
+            })
+            void openFile.on('click', () => {
+                this.openTestFile(testFile)
+            })
+            void cancel.on('click', this.closeSelectTestPopup.bind(this))
+        }
     }
 
-    private openTestFile(testFile: string) {
-        this.handleOpenTestFile?.(testFile)
+    private openTestFile(testFile: string, testName?: string) {
+        this.handleOpenTestFile?.(testFile, testName)
         this.closeSelectTestPopup()
     }
 
     public getFileForLine(row: number): string | undefined {
-        let line = this.testLog.getScrollY()
+        return this.getFileInfoForLine(row)?.file
+    }
+
+    private getFileInfoForLine(
+        row: number
+    ) {
+        let currentRow = this.testLog.getScrollY()
 
         for (const file of this.lastResults.testFiles ?? []) {
-            const minRow = line
+            const fileHeaderRow = currentRow
+            const tests = file.tests ?? []
             const lineCount =
-                1 +
-                (file.tests ?? []).length +
-                (file.status === 'running' ? 1 : 0)
-            const maxRow = line + lineCount - 1
+                1 + tests.length + (file.status === 'running' ? 1 : 0)
+            const maxRow = currentRow + lineCount - 1
 
-            if (row >= minRow && row <= maxRow) {
-                return file.path
+            if (row >= currentRow && row <= maxRow) {
+                if (row === fileHeaderRow) {
+                    return { file: file.path }
+                }
+                const testIndex = row - fileHeaderRow - 1
+                const test = tests[testIndex]
+                return {
+                    file: file.path,
+                    testName: test?.name,
+                }
             }
 
-            line = maxRow + 1
+            currentRow = maxRow + 1
         }
 
         return undefined
@@ -859,7 +916,7 @@ export interface TestReporterOptions {
     handleQuit?: () => void
     onRequestOpenTestFile?: () => void
     handleRerunTestFile?: (fileName: string) => void
-    handleOpenTestFile?: (fileName: string) => void
+    handleOpenTestFile?: (fileName: string, testName?: string) => void
     handleFilterPatternChange?: (pattern?: string) => void
     handleToggleDebug?: () => void
     handletoggleStandardWatch?: () => void

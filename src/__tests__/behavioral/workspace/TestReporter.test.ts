@@ -444,8 +444,9 @@ export default class TestReporterTest extends AbstractModuleTest {
 
     @test()
     protected static async createsSelectTestPopupWidgetOnStart() {
-        const reporter = this.TestReporter() as any
         const capturedTextOptions: { type: string; options: any }[] = []
+
+        const reporter = this.TestReporter() as any
         const popupWidth = 50
 
         const fakePopup = {
@@ -468,26 +469,26 @@ export default class TestReporterTest extends AbstractModuleTest {
 
         reporter.dropInSelectTestPopup({
             testFile: 'src/foo/bar.test.ts',
+            testName: 'someTestName',
             row: 10,
             column: 30,
         })
 
         const entry = capturedTextOptions.find(
-            (o) =>
-                o.type === 'text' &&
-                o.options?.text?.startsWith('Selected file:')
+            (o) => o.type === 'text' && o.options?.text?.startsWith('File:')
         )
 
-        assert.isTruthy(entry, 'popup text widget must be created')
+        assert.isTruthy(entry, 'must create text widget that starts with File:')
 
         const { parent: _parent, ...restOptions } = entry!.options
 
         assert.isEqualDeep(restOptions, {
             left: 1,
             top: 1,
-            height: 4,
+            height: 8,
             width: popupWidth - 2,
-            text: 'Selected file:\n\nsrc/foo/bar.test.ts',
+            text: 'File:\nsrc/foo/bar.test.ts\n\nTest:\nsomeTestName',
+            wordWrap: true,
         })
     }
 
@@ -522,7 +523,7 @@ export default class TestReporterTest extends AbstractModuleTest {
         })
 
         const entry = capturedWidgets.find(
-            (o) => o.type === 'button' && o.options?.text === 'Open'
+            (o) => o.type === 'button' && o.options?.text === 'Open File'
         )
 
         assert.isTruthy(
@@ -533,9 +534,9 @@ export default class TestReporterTest extends AbstractModuleTest {
         const { parent: _parent, ...restOptions } = entry!.options
 
         assert.isEqualDeep(restOptions, {
-            left: 11,
-            top: 6,
-            text: 'Open',
+            left: 14,
+            top: 7,
+            text: 'Open File',
         })
     }
 
@@ -581,8 +582,8 @@ export default class TestReporterTest extends AbstractModuleTest {
         const { parent: _parent, ...restOptions } = entry!.options
 
         assert.isEqualDeep(restOptions, {
-            left: 30,
-            top: 6,
+            left: 28,
+            top: 7,
             text: 'Cancel',
         })
     }
@@ -715,9 +716,16 @@ export default class TestReporterTest extends AbstractModuleTest {
 
         reporter.updateLogs()
 
-        assert.isEqual(rowHeights[0], '100%', 'row 0 must be 100% when no errors')
+        assert.isEqual(
+            rowHeights[0],
+            '100%',
+            'row 0 must be 100% when no errors'
+        )
         assert.isEqual(rowHeights[1], '0%', 'row 1 must be 0% when no errors')
-        assert.isTrue(updateLayoutCalled, 'updateLayout must be called when collapsing error row')
+        assert.isTrue(
+            updateLayoutCalled,
+            'updateLayout must be called when collapsing error row'
+        )
     }
 
     @test()
@@ -742,15 +750,28 @@ export default class TestReporterTest extends AbstractModuleTest {
 
         reporter.updateLogs()
 
-        assert.isEqual(rowHeights[0], '60%', 'row 0 must be 60% when errors present')
-        assert.isEqual(rowHeights[1], '40%', 'row 1 must be 40% when errors present')
+        assert.isEqual(
+            rowHeights[0],
+            '60%',
+            'row 0 must be 60% when errors present'
+        )
+        assert.isEqual(
+            rowHeights[1],
+            '40%',
+            'row 1 must be 40% when errors present'
+        )
     }
 
     @test()
     protected static async setsAllPassingLabelWhenAllTestsPass() {
         const reporter = this.TestReporter()
         let capturedLabel: string | undefined
-        reporter.bar = { setLabel: (label: string) => { capturedLabel = label }, setProgress: () => {} }
+        reporter.bar = {
+            setLabel: (label: string) => {
+                capturedLabel = label
+            },
+            setProgress: () => {},
+        }
 
         reporter.updateProgressBar({
             totalTestFiles: 1,
@@ -765,17 +786,19 @@ export default class TestReporterTest extends AbstractModuleTest {
             ],
         })
 
-        assert.isEqual(
-            capturedLabel,
-            '100% tests passed — 2/2 passed in 300ms'
-        )
+        assert.isEqual(capturedLabel, '100% tests passed — 2/2 passed in 300ms')
     }
 
     @test()
     protected static async setsFailingLabelWithSingularWhenOneTestFails() {
         const reporter = this.TestReporter()
         let capturedLabel: string | undefined
-        reporter.bar = { setLabel: (label: string) => { capturedLabel = label }, setProgress: () => {} }
+        reporter.bar = {
+            setLabel: (label: string) => {
+                capturedLabel = label
+            },
+            setProgress: () => {},
+        }
 
         reporter.updateProgressBar({
             totalTestFiles: 1,
@@ -790,17 +813,19 @@ export default class TestReporterTest extends AbstractModuleTest {
             ],
         })
 
-        assert.isEqual(
-            capturedLabel,
-            '1 test failed — 1/2 passed in 300ms'
-        )
+        assert.isEqual(capturedLabel, '1 test failed — 1/2 passed in 300ms')
     }
 
     @test()
     protected static async setsFailingLabelWithPluralWhenMultipleTestsFail() {
         const reporter = this.TestReporter()
         let capturedLabel: string | undefined
-        reporter.bar = { setLabel: (label: string) => { capturedLabel = label }, setProgress: () => {} }
+        reporter.bar = {
+            setLabel: (label: string) => {
+                capturedLabel = label
+            },
+            setProgress: () => {},
+        }
 
         reporter.updateProgressBar({
             totalTestFiles: 1,
@@ -816,10 +841,7 @@ export default class TestReporterTest extends AbstractModuleTest {
             ],
         })
 
-        assert.isEqual(
-            capturedLabel,
-            '2 tests failed — 1/3 passed in 350ms'
-        )
+        assert.isEqual(capturedLabel, '2 tests failed — 1/3 passed in 350ms')
     }
 
     private static fakeMenu(captured: Record<string, string>) {

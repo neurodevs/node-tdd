@@ -1,5 +1,6 @@
 import chokidar from 'chokidar'
 import { spawn } from 'child_process'
+import { readFileSync } from 'fs'
 import path from 'path'
 import CommandServiceImpl from './CommandService.js'
 import TestReporter from './TestReporter.js'
@@ -65,11 +66,34 @@ const reporter = new TestReporter({
         currentWatchMode = currentWatchMode === 'smart' ? 'off' : 'smart'
         reporter.setWatchMode(currentWatchMode)
     },
-    handleOpenTestFile: (filePath: string) => {
+    handleOpenTestFile: (filePath: string, testName?: string) => {
         const fullPath = path.isAbsolute(filePath)
             ? filePath
             : path.join(cwd, 'src', '__tests__', filePath)
-        spawn('code', [fullPath], { detached: true, stdio: 'ignore' }).unref()
+
+        let resolvedLine = -1
+
+        if (testName) {
+            try {
+                const contents = readFileSync(fullPath, 'utf8')
+                const lines = contents.split('\n')
+                const idx = lines.findIndex((l) => l.includes(testName))
+
+                if (idx !== -1) {
+                    resolvedLine = idx + 1
+                }
+            } catch {
+                // if file can't be read, just open without a line
+            }
+        }
+
+        const target =
+            resolvedLine !== -1 ? `${fullPath}:${resolvedLine}` : fullPath
+
+        spawn('code', ['--goto', target], {
+            detached: true,
+            stdio: 'ignore',
+        }).unref()
     },
 })
 

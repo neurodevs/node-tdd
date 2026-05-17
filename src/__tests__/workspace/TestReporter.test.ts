@@ -1291,6 +1291,74 @@ export default class TestReporterTest extends AbstractModuleTest {
         }
     }
 
+    @test()
+    protected static async submitWithEmptyStringCallsFilterChangeWithUndefined() {
+        let capturedPattern: string | undefined = 'not-set'
+        const reporter = this.TestReporter({
+            handleFilterPatternChange: (p?: string) => {
+                capturedPattern = p
+            },
+        })
+
+        let submitHandler: ((payload: { value: string }) => void) | undefined
+
+        const fakeInput = {
+            on: (event: string, handler: any) => {
+                if (event === 'submit') {
+                    submitHandler = handler
+                }
+            },
+            setValue: () => {},
+            getFrame: () => ({ width: 50 }),
+        }
+
+        const fakeWidget: any = new Proxy(
+            {},
+            {
+                get: (_t, prop: string) => {
+                    if (prop === 'getFrame') {
+                        return () => ({ left: 0, top: 0, width: 100, height: 50 })
+                    }
+                    if (prop === 'getChildById') {
+                        return () => null
+                    }
+                    if (prop === 'getRows') {
+                        return () => [{}]
+                    }
+                    if (prop === 'getFocusedWidget') {
+                        return () => null
+                    }
+                    if (prop === 'on') {
+                        return () => fakeWidget
+                    }
+                    return () => fakeWidget
+                },
+            }
+        )
+
+        reporter.widgets = {
+            Widget: (type: string, _options: any) => {
+                if (type === 'input') {
+                    return fakeInput
+                }
+                return fakeWidget
+            },
+        }
+
+        await reporter.start()
+
+        assert.isTruthy(submitHandler, 'submit handler must be registered on filter input')
+
+        submitHandler!({ value: '' })
+
+        assert.isUndefined(
+            capturedPattern,
+            'handleFilterPatternChange must receive undefined when submitted with empty string'
+        )
+
+        clearInterval(reporter.updateInterval)
+    }
+
     private static TestReporter(options?: TestReporterOptions) {
         return new TestReporter(options) as any
     }

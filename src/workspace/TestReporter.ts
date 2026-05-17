@@ -581,7 +581,7 @@ export default class TestReporter {
         })
 
         void this.filterInput.on('submit', (payload) => {
-            this.handleFilterChange?.(payload?.value ?? undefined)
+            this.handleFilterChange?.(payload?.value || undefined)
         })
 
         this.clearFilterPatternButton = this.widgets.Widget('button', {

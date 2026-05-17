@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import { spawn } from 'child_process'
 import durationUtil from './duration.utility.js'
 import { ButtonWidget } from './button.types.js'
 import { InputWidget } from './input.types.js'
@@ -13,12 +14,17 @@ import { TestResults, TestRunnerStatus } from './test.types.js'
 import TestLogItemGenerator from './TestLogItemGenerator.js'
 
 export default class TestReporter {
+    public static spawnFn: (cmd: string, args: string[]) => any = spawn
+    public static platformFn: () => string = () => process.platform
+
     private started = false
     private table?: any
     private bar!: ProgressBarWidget
     private bottomLayout!: LayoutWidget
     private testLog!: TextWidget
     private errorLog?: TextWidget
+    private copyErrorLogButton?: ButtonWidget
+    private lastErrorContent = ''
     private errorLogItemGenerator: TestLogItemGenerator
     private lastResults: TestReporterResults = {
         totalTestFiles: 0,
@@ -513,9 +519,7 @@ export default class TestReporter {
         return this.getFileInfoForLine(row)?.file
     }
 
-    private getFileInfoForLine(
-        row: number
-    ) {
+    private getFileInfoForLine(row: number) {
         let currentRow = this.testLog.getScrollY()
 
         for (const file of this.lastResults.testFiles ?? []) {
@@ -706,6 +710,7 @@ export default class TestReporter {
                 ? errorContent.replace(new RegExp(this.cwd + '/', 'gim'), '')
                 : errorContent
 
+            this.lastErrorContent = cleanedLog
             this.errorLog?.setText(cleanedLog)
         }
 
@@ -772,8 +777,38 @@ export default class TestReporter {
                 throw new Error('Pulling child error')
             }
 
+            const buttonWidth = 10
+
+            this.copyErrorLogButton = this.widgets.Widget('button', {
+                parent: cell,
+                top: 0,
+                left: cell.getFrame().width - buttonWidth + 2,
+                width: buttonWidth,
+                text: ' Copy All ',
+                shouldLockRightWithParent: true,
+                blurAttr: { bgColor: 'red' },
+                focusAttr: { bgColor: 'green' },
+            } as any)
+
+            const raw = (this.copyErrorLogButton as any).getTermKitElement?.()
+            if (raw) {
+                raw.on('enter', () => {
+                    raw.attr = { bgColor: 'green' }
+                    raw.draw?.()
+                })
+                raw.on('leave', () => {
+                    raw.attr = raw.blurAttr
+                    raw.draw?.()
+                })
+            }
+
+            void this.copyErrorLogButton.on('click', () => {
+                this.copyToClipboard(this.lastErrorContent)
+            })
+
             this.errorLog = this.widgets.Widget('text', {
                 parent: cell,
+                top: 1,
                 width: '100%',
                 height: '100%',
                 isScrollEnabled: true,
@@ -784,6 +819,22 @@ export default class TestReporter {
                 focusable: false,
             })
         }
+    }
+
+    private copyToClipboard(text: string) {
+        const stripped = text.replace(/\x1b\[[0-9;]*m/g, '')
+        const platform = TestReporter.platformFn()
+
+        const [cmd, ...args] =
+            platform === 'win32'
+                ? ['clip']
+                : platform === 'darwin'
+                  ? ['pbcopy']
+                  : ['xclip', '-selection', 'clipboard']
+
+        const proc = TestReporter.spawnFn(cmd, args)
+        proc.stdin.write(stripped)
+        proc.stdin.end()
     }
 
     private updateProgressBar(results: TestResults) {

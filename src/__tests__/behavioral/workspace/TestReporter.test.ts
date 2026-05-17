@@ -844,6 +844,191 @@ export default class TestReporterTest extends AbstractModuleTest {
         assert.isEqual(capturedLabel, '2 tests failed — 1/3 passed in 350ms')
     }
 
+    @test()
+    protected static async createsCopyErrorLogButtonWithExpectedOptions() {
+        const reporter = this.TestReporter()
+        let capturedButtonOptions: any
+
+        const fakeCell = { getFrame: () => ({ width: 100, height: 50 }) }
+        reporter.orientation = 'landscape'
+        reporter.bottomLayout = this.fakeErrorLogBottomLayout(fakeCell)
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                if (type === 'button') {
+                    capturedButtonOptions = options
+                }
+                return this.fakeTermKitWidget()
+            },
+        }
+
+        reporter.dropInErrorLog()
+
+        const { parent: _parent, ...rest } = capturedButtonOptions
+        assert.isEqualDeep(rest, {
+            top: 0,
+            left: 92,
+            width: 10,
+            text: ' Copy All ',
+            shouldLockRightWithParent: true,
+            blurAttr: { bgColor: 'red' },
+            focusAttr: { bgColor: 'green' },
+        })
+    }
+
+    @test()
+    protected static async enterCopyButtonChangesBgColorToGreen() {
+        const reporter = this.TestReporter()
+        const { enterLeaveHandlers, fakeRaw } =
+            this.dropInErrorLogWithFakes(reporter)
+
+        enterLeaveHandlers['enter']?.()
+
+        assert.isEqualDeep(fakeRaw.attr, { bgColor: 'green' })
+    }
+
+    @test()
+    protected static async leaveCopyButtonChangesBgColorToRed() {
+        const reporter = this.TestReporter()
+        const { enterLeaveHandlers, fakeRaw } =
+            this.dropInErrorLogWithFakes(reporter)
+
+        enterLeaveHandlers['leave']?.()
+
+        assert.isEqualDeep(fakeRaw.attr, fakeRaw.blurAttr)
+    }
+
+    @test()
+    protected static async passesLastErrorContentOnCopyButtonClick() {
+        const reporter = this.TestReporter()
+        let capturedText: string | undefined
+
+        reporter.copyToClipboard = (text: string) => {
+            capturedText = text
+        }
+
+        const { clickHandler } = this.dropInErrorLogWithFakes(reporter)
+        reporter.lastErrorContent = 'some error output'
+
+        clickHandler?.()
+
+        assert.isEqual(capturedText, 'some error output')
+    }
+
+    @test()
+    protected static async copyToClipboardUsesCorrectCommandOnMac() {
+        const reporter = this.TestReporter()
+        TestReporter.platformFn = () => 'darwin'
+        const { capturedCmd, fakeSpawn } = this.fakeSpawn()
+        TestReporter.spawnFn = fakeSpawn
+
+        reporter.copyToClipboard('test output')
+
+        assert.isEqual(capturedCmd.cmd, 'pbcopy')
+        assert.isEqualDeep(capturedCmd.args, [])
+    }
+
+    @test()
+    protected static async copyToClipboardUsesCorrectCommandOnWindows() {
+        const reporter = this.TestReporter()
+        TestReporter.platformFn = () => 'win32'
+        const { capturedCmd, fakeSpawn } = this.fakeSpawn()
+        TestReporter.spawnFn = fakeSpawn
+
+        reporter.copyToClipboard('test output')
+
+        assert.isEqual(capturedCmd.cmd, 'clip')
+        assert.isEqualDeep(capturedCmd.args, [])
+    }
+
+    @test()
+    protected static async copyToClipboardUsesCorrectCommandOnLinux() {
+        const reporter = this.TestReporter()
+        TestReporter.platformFn = () => 'linux'
+        const { capturedCmd, fakeSpawn } = this.fakeSpawn()
+        TestReporter.spawnFn = fakeSpawn
+
+        reporter.copyToClipboard('test output')
+
+        assert.isEqual(capturedCmd.cmd, 'xclip')
+        assert.isEqualDeep(capturedCmd.args, ['-selection', 'clipboard'])
+    }
+
+    private static fakeSpawn() {
+        const capturedCmd = { cmd: '', args: [] as string[] }
+        const fakeStdin = { write: () => {}, end: () => {} }
+        const fakeSpawn = (cmd: string, args: string[]) => {
+            capturedCmd.cmd = cmd
+            capturedCmd.args = args
+            return { stdin: fakeStdin }
+        }
+        return { capturedCmd, fakeSpawn }
+    }
+
+    private static fakeTermKitWidget() {
+        const fakeRaw = {
+            attr: {} as any,
+            blurAttr: { bgColor: 'red' },
+            draw: () => {},
+            on: (_event: string, _handler: () => void) => {},
+        }
+        return {
+            on: (_event: string, _handler: () => void) => {},
+            getTermKitElement: () => fakeRaw,
+            getFrame: () => ({ width: 10, height: 1 }),
+        }
+    }
+
+    private static dropInErrorLogWithFakes(reporter: any) {
+        const enterLeaveHandlers: Record<string, () => void> = {}
+        let clickHandler: (() => void) | undefined
+
+        const fakeRaw = {
+            attr: {} as any,
+            blurAttr: { bgColor: 'red' },
+            draw: () => {},
+            on: (event: string, handler: () => void) => {
+                enterLeaveHandlers[event] = handler
+            },
+        }
+
+        const fakeCell = { getFrame: () => ({ width: 100, height: 50 }) }
+        reporter.orientation = 'landscape'
+        reporter.bottomLayout = this.fakeErrorLogBottomLayout(fakeCell)
+        reporter.widgets = {
+            Widget: (type: string, _options: any) => {
+                if (type === 'button') {
+                    return {
+                        on: (event: string, handler: () => void) => {
+                            if (event === 'click') {
+                                clickHandler = handler
+                            }
+                        },
+                        getTermKitElement: () => fakeRaw,
+                        getFrame: () => ({ width: 10, height: 1 }),
+                    }
+                }
+                return {
+                    on: () => {},
+                    getFrame: () => ({ width: 100, height: 50 }),
+                }
+            },
+        }
+
+        reporter.dropInErrorLog()
+
+        return { enterLeaveHandlers, fakeRaw, clickHandler }
+    }
+
+    private static fakeErrorLogBottomLayout(fakeCell: any) {
+        return {
+            getRows: () => [{ id: 'row_1' }],
+            addColumn: () => {},
+            setColumnWidth: () => {},
+            updateLayout: () => {},
+            getChildById: (id: string) => (id === 'errors' ? fakeCell : null),
+        }
+    }
+
     private static fakeMenu(captured: Record<string, string>) {
         return {
             setTextForItem: (key: string, label: string) => {

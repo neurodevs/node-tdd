@@ -662,12 +662,14 @@ export default class TestReporterTest extends AbstractModuleTest {
 
         reporter.testLog = { getScrollY: () => 0 }
 
-        // file1: rows 0–2 (header + 2 tests), file2: rows 3–4 (header + 1 test)
+        // file1: row 0 (header), 1 (blank), 2–3 (tests), 4 (blank)
+        // file2: row 5 (header), 6 (blank), 7 (test), 8 (blank)
         assert.isEqual(reporter.getFileForLine(0), 'file1.ts') // header
-        assert.isEqual(reporter.getFileForLine(2), 'file1.ts') // last test
-        assert.isEqual(reporter.getFileForLine(3), 'file2.ts') // file2 header
-        assert.isEqual(reporter.getFileForLine(4), 'file2.ts') // file2 last test
-        assert.isEqual(reporter.getFileForLine(5), undefined) // out of range
+        assert.isEqual(reporter.getFileForLine(2), 'file1.ts') // first test
+        assert.isEqual(reporter.getFileForLine(3), 'file1.ts') // last test
+        assert.isEqual(reporter.getFileForLine(5), 'file2.ts') // file2 header
+        assert.isEqual(reporter.getFileForLine(7), 'file2.ts') // file2 test
+        assert.isEqual(reporter.getFileForLine(9), undefined) // out of range
     }
 
     @test()

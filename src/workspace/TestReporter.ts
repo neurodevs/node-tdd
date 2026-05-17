@@ -527,15 +527,19 @@ export default class TestReporter {
         for (const file of this.lastResults.testFiles ?? []) {
             const fileHeaderRow = currentRow
             const tests = file.tests ?? []
+            const hasTests = file.tests !== undefined
             const lineCount =
-                1 + tests.length + (file.status === 'running' ? 1 : 0)
+                1 +
+                (hasTests ? 2 : 0) +
+                tests.length +
+                (file.status === 'running' ? 1 : 0)
             const maxRow = currentRow + lineCount - 1
 
             if (row >= currentRow && row <= maxRow) {
                 if (row === fileHeaderRow) {
                     return { file: file.path }
                 }
-                const testIndex = row - fileHeaderRow - 1
+                const testIndex = row - fileHeaderRow - 2
                 const test = tests[testIndex]
                 return {
                     file: file.path,

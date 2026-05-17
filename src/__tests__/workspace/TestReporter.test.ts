@@ -1,9 +1,9 @@
-import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
-import test from '../../../utilities/decorators.js'
-import assert from '../../../utilities/assert.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
+import test from '../../utilities/decorators.js'
+import assert from '../../utilities/assert.js'
 import TestReporter, {
     TestReporterOptions,
-} from '../../../workspace/TestReporter.js'
+} from '../../workspace/TestReporter.js'
 
 export default class TestReporterTest extends AbstractModuleTest {
     @test()

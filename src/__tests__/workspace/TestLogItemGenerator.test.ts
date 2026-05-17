@@ -1,8 +1,8 @@
-import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
-import test from '../../../utilities/decorators.js'
-import assert from '../../../utilities/assert.js'
-import TestLogItemGenerator from '../../../workspace/TestLogItemGenerator.js'
-import { TestFile } from '../../../workspace/test.types.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
+import test from '../../utilities/decorators.js'
+import assert from '../../utilities/assert.js'
+import TestLogItemGenerator from '../../workspace/TestLogItemGenerator.js'
+import { TestFile } from '../../workspace/test.types.js'
 
 export default class TestLogItemGeneratorTest extends AbstractModuleTest {
     private static generator: TestLogItemGenerator

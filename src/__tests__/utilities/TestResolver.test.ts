@@ -1,8 +1,7 @@
-import assert from '../../../utilities/assert.js'
-import test, { suite } from '../../../utilities/decorators.js'
-import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
-
-import TestDecoratorResolver from '../../../utilities/TestDecoratorResolver.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
+import assert from '../../utilities/assert.js'
+import test, { suite } from '../../utilities/decorators.js'
+import TestDecoratorResolver from '../../utilities/TestDecoratorResolver.js'
 
 @suite()
 export default class TestDecoratorResolverTest extends AbstractModuleTest {
@@ -33,7 +32,6 @@ export default class TestDecoratorResolverTest extends AbstractModuleTest {
         TestDecoratorResolverTest.counter = 10
 
         const activeTest = TestDecoratorResolver.getActiveTest()
-
         assert.isInstanceOf(
             activeTest,
             TestDecoratorResolverTest,
@@ -41,7 +39,6 @@ export default class TestDecoratorResolverTest extends AbstractModuleTest {
         )
 
         const activeTest2 = TestDecoratorResolver.getActiveTest()
-
         assert.isEqual(
             activeTest,
             activeTest2,

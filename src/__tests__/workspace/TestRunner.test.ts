@@ -1,8 +1,8 @@
-import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
-import test from '../../../utilities/decorators.js'
-import assert from '../../../utilities/assert.js'
-import TestRunner from '../../../workspace/TestRunner.js'
-import CommandServiceImpl from '../../../workspace/CommandService.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
+import test from '../../utilities/decorators.js'
+import assert from '../../utilities/assert.js'
+import TestRunner from '../../workspace/TestRunner.js'
+import CommandServiceImpl from '../../workspace/CommandService.js'
 
 export default class TestRunnerTest extends AbstractModuleTest {
     private static runner: TestRunner

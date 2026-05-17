@@ -1,7 +1,7 @@
-import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
-import assert from '../../../utilities/assert.js'
-import test from '../../../utilities/decorators.js'
-import StackCleaner from '../../../utilities/StackCleaner.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
+import assert from '../../utilities/assert.js'
+import test from '../../utilities/decorators.js'
+import StackCleaner from '../../utilities/StackCleaner.js'
 
 export default class ErrorStackTest extends AbstractModuleTest {
     @test(

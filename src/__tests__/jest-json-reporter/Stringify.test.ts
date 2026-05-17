@@ -1,11 +1,11 @@
-import AbstractModuleTest from '../../../utilities/AbstractModuleTest.js'
-import test from '../../../utilities/decorators.js'
-import assert from '../../../utilities/assert.js'
-import { retrocycle } from '../../../jest-json-reporter/cycle.js'
+import AbstractModuleTest from '../../utilities/AbstractModuleTest.js'
+import test from '../../utilities/decorators.js'
+import assert from '../../utilities/assert.js'
+import { retrocycle } from '../../jest-json-reporter/cycle.js'
 import JsonReporter, {
     END_DIVIDER,
     START_DIVIDER,
-} from '../../../jest-json-reporter/JsonReporter.js'
+} from '../../jest-json-reporter/JsonReporter.js'
 
 export default class StringifyTest extends AbstractModuleTest {
     private static originalLog: typeof console.log

@@ -1,6 +1,6 @@
-import assert from '../../../utilities/assert.js'
-import test from '../../../utilities/decorators.js'
-import AbstractStaticTest from '../../support/AbstractStaticTest.js'
+import assert from '../../utilities/assert.js'
+import test from '../../utilities/decorators.js'
+import AbstractStaticTest from '../support/AbstractStaticTest.js'
 
 export default class StaticParentTestCanAccessParentMethodsTest extends AbstractStaticTest {
     protected static didCallFirstTest = false

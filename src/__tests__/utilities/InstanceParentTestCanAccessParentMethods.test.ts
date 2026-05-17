@@ -1,6 +1,6 @@
-import assert from '../../../utilities/assert.js'
-import test, { suite } from '../../../utilities/decorators.js'
-import AbstractStaticTest from '../../support/AbstractStaticTest.js'
+import assert from '../../utilities/assert.js'
+import test, { suite } from '../../utilities/decorators.js'
+import AbstractStaticTest from '../support/AbstractStaticTest.js'
 
 @suite()
 export default class InstanceParentTestCanAccessParentMethodsTest extends AbstractStaticTest {

@@ -21,12 +21,14 @@ export default class TestLogItemGenerator {
         }\n`
 
         if (file.tests) {
+            logContent += '\n'
             file.tests.forEach((test) => {
                 const bullet = this.bulletBasedOnStatus(test.status)
                 logContent += `  ${bullet} ^-${
                     test.name
                 }^ ${this.generateDuration(test.status, test.duration)}\n`
             })
+            logContent += '\n'
         }
 
         if (file.status === 'running') {

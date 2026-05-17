@@ -23,8 +23,10 @@ export default class TestReporter {
     private bottomLayout!: LayoutWidget
     private testLog!: TextWidget
     private errorLog?: TextWidget
+    private dividerWidget?: TextWidget
     private copyErrorLogButton?: ButtonWidget
     private lastErrorContent = ''
+    private splitPercent = 60
     private errorLogItemGenerator: TestLogItemGenerator
     private lastResults: TestReporterResults = {
         totalTestFiles: 0,
@@ -699,12 +701,13 @@ export default class TestReporter {
                 this.bottomLayout.setRowHeight(0, '100%')
                 this.bottomLayout.setRowHeight(1, '0%')
             }
+            this.dividerWidget?.setFrame({ top: -1, left: -1 })
         } else {
             !this.errorLog && this.dropInErrorLog()
 
             if (this.bottomLayout.getRows().length === 2) {
-                this.bottomLayout.setRowHeight(0, '60%')
-                this.bottomLayout.setRowHeight(1, '40%')
+                this.bottomLayout.setRowHeight(0, `${this.splitPercent}%`)
+                this.bottomLayout.setRowHeight(1, `${100 - this.splitPercent}%`)
             }
             const cleanedLog = this.cwd
                 ? errorContent.replace(new RegExp(this.cwd + '/', 'gim'), '')
@@ -758,18 +761,22 @@ export default class TestReporter {
                     columns: [{ id: 'errors', width: '100%' }],
                 })
 
-                this.bottomLayout.setRowHeight(0, '60%')
-                this.bottomLayout.setRowHeight(1, '40%')
+                this.bottomLayout.setRowHeight(0, `${this.splitPercent}%`)
+                this.bottomLayout.setRowHeight(1, `${100 - this.splitPercent}%`)
             } else {
-                this.bottomLayout.addColumn(0, { id: 'errors', width: '40%' })
+                this.bottomLayout.addColumn(0, {
+                    id: 'errors',
+                    width: `${100 - this.splitPercent}%`,
+                })
                 this.bottomLayout.setColumnWidth({
                     rowIdx: 0,
                     columnIdx: 0,
-                    width: '60%',
+                    width: `${this.splitPercent}%`,
                 })
             }
 
             this.bottomLayout.updateLayout()
+            this.dropInDivider()
 
             const cell = this.bottomLayout.getChildById('errors')
 
@@ -819,6 +826,112 @@ export default class TestReporter {
                 focusable: false,
             })
         }
+    }
+
+    private dropInDivider() {
+        const isPortrait = this.orientation === 'portrait'
+        const layoutFrame = this.bottomLayout.getFrame()
+
+        const { top, left, width, height, text } = this.buildDividerProps(
+            isPortrait,
+            layoutFrame
+        )
+
+        this.dividerWidget = this.widgets.Widget('text', {
+            parent: this.window,
+            top,
+            left,
+            width,
+            height,
+            text,
+            focusable: false,
+        })
+
+        const raw = (this.dividerWidget as any).getTermKitElement?.()
+        if (raw) {
+            raw.on('drag', (payload: { dx: number; dy: number }) => {
+                this.handleDividerDrag(payload)
+            })
+        }
+    }
+
+    private buildDividerProps(
+        isPortrait: boolean,
+        layoutFrame: {
+            top: number
+            left: number
+            width: number
+            height: number
+        }
+    ) {
+        const handle = '☰'
+        if (isPortrait) {
+            const top =
+                layoutFrame.top +
+                Math.floor((layoutFrame.height * this.splitPercent) / 100) -
+                1
+            const left = layoutFrame.left
+            const width = layoutFrame.width
+            const halfL = Math.floor((width - 1) / 2)
+            const halfR = Math.ceil((width - 1) / 2)
+            return {
+                top,
+                left,
+                width,
+                height: 1,
+                text: `${'─'.repeat(halfL)}${handle}${'─'.repeat(halfR)}`,
+            }
+        } else {
+            const left =
+                layoutFrame.left +
+                Math.floor((layoutFrame.width * this.splitPercent) / 100)
+            const top = layoutFrame.top
+            const height = layoutFrame.height
+            const mid = Math.floor(height / 2)
+            return {
+                top,
+                left,
+                width: 1,
+                height,
+                text: Array.from({ length: height }, (_, i) =>
+                    i === mid ? handle : '│'
+                ).join('\n'),
+            }
+        }
+    }
+
+    private handleDividerDrag(payload: { dx: number; dy: number }) {
+        const isPortrait = this.orientation === 'portrait'
+        const layoutFrame = this.bottomLayout.getFrame()
+        const delta = isPortrait
+            ? (payload.dy / layoutFrame.height) * 100
+            : (payload.dx / layoutFrame.width) * 100
+
+        this.splitPercent = Math.max(
+            10,
+            Math.min(90, this.splitPercent + delta)
+        )
+
+        if (isPortrait) {
+            this.bottomLayout.setRowHeight(0, `${this.splitPercent}%`)
+            this.bottomLayout.setRowHeight(1, `${100 - this.splitPercent}%`)
+        } else {
+            this.bottomLayout.setColumnWidth({
+                rowIdx: 0,
+                columnIdx: 0,
+                width: `${this.splitPercent}%`,
+            })
+            this.bottomLayout.setColumnWidth({
+                rowIdx: 0,
+                columnIdx: 1,
+                width: `${100 - this.splitPercent}%`,
+            })
+        }
+
+        this.bottomLayout.updateLayout()
+
+        const { top, left } = this.buildDividerProps(isPortrait, layoutFrame)
+        this.dividerWidget?.setFrame({ top, left })
     }
 
     private copyToClipboard(text: string) {

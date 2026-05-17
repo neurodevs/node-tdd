@@ -226,6 +226,7 @@ export default class TestReporterTest extends AbstractModuleTest {
             addColumn: () => {},
             setColumnWidth: () => {},
             updateLayout: () => {},
+            getFrame: () => ({ top: 4, left: 0, width: 100, height: 46 }),
             getChildById: (id: string) => {
                 return id === 'errors' ? fakeCell : null
             },
@@ -696,6 +697,33 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async hidesDividerWhenNoErrorContent() {
+        const reporter = this.TestReporter()
+        let setFrameCalledWith: any
+
+        reporter.selectTestPopup = null
+        reporter.lastResults = { testFiles: [], customErrors: [] }
+        reporter.testLog = { setText: () => {} }
+        reporter.bottomLayout = {
+            getRows: () => [{}, {}],
+            setRowHeight: () => {},
+            updateLayout: () => {},
+        }
+        reporter.dividerWidget = {
+            setFrame: (frame: any) => {
+                setFrameCalledWith = frame
+            },
+        }
+
+        reporter.updateLogs()
+
+        assert.isTruthy(
+            setFrameCalledWith,
+            'dividerWidget.setFrame must be called when error content is cleared'
+        )
+    }
+
+    @test()
     protected static async collapsesErrorLogRowWhenNoErrorContent() {
         const reporter = this.TestReporter() as any
         const rowHeights: Record<string, string> = {}
@@ -842,6 +870,148 @@ export default class TestReporterTest extends AbstractModuleTest {
         })
 
         assert.isEqual(capturedLabel, '2 tests failed — 1/3 passed in 350ms')
+    }
+
+    @test()
+    protected static async createsDividerWidgetWithExpectedPortraitOptions() {
+        const reporter = this.TestReporter()
+        const capturedWidgets: { type: string; options: any }[] = []
+
+        reporter.orientation = 'portrait'
+        reporter.window = {}
+        reporter.bottomLayout = this.fakeDividerBottomLayout()
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                capturedWidgets.push({ type, options })
+                return this.fakeTermKitWidget()
+            },
+        }
+
+        reporter.dropInDivider()
+
+        const entry = capturedWidgets.find((w) => w.type === 'text')!
+        const { parent: _parent, ...rest } = entry.options
+
+        assert.isEqualDeep(rest, {
+            top: 30,
+            left: 0,
+            width: 100,
+            height: 1,
+            text: `${'─'.repeat(49)}☰${'─'.repeat(50)}`,
+            focusable: false,
+        })
+    }
+
+    @test()
+    protected static async createsDividerWidgetWithExpectedLandscapeOptions() {
+        const reporter = this.TestReporter()
+        const capturedWidgets: { type: string; options: any }[] = []
+
+        reporter.orientation = 'landscape'
+        reporter.window = {}
+        reporter.bottomLayout = this.fakeDividerBottomLayout()
+        reporter.widgets = {
+            Widget: (type: string, options: any) => {
+                capturedWidgets.push({ type, options })
+                return this.fakeTermKitWidget()
+            },
+        }
+
+        reporter.dropInDivider()
+
+        const entry = capturedWidgets.find((w) => w.type === 'text')!
+        const { parent: _parent, ...rest } = entry.options
+        const expectedText = Array.from({ length: 46 }, (_, i) =>
+            i === 23 ? '☰' : '│'
+        ).join('\n')
+
+        assert.isEqualDeep(rest, {
+            top: 4,
+            left: 60,
+            width: 1,
+            height: 46,
+            text: expectedText,
+            focusable: false,
+        })
+    }
+
+    @test()
+    protected static async handlesDividerOnDragForPortrait() {
+        const reporter = this.TestReporter()
+        const rowHeights: Record<number, string> = {}
+        let capturedSetFrame: any
+
+        reporter.orientation = 'portrait'
+        reporter.splitPercent = 60
+        reporter.bottomLayout = {
+            getFrame: () => ({ top: 0, left: 0, width: 200, height: 100 }),
+            setRowHeight: (idx: number, h: string) => {
+                rowHeights[idx] = h
+            },
+            setColumnWidth: () => {},
+            updateLayout: () => {},
+        }
+        reporter.dividerWidget = {
+            setFrame: (frame: any) => {
+                capturedSetFrame = frame
+            },
+        }
+
+        reporter.handleDividerDrag({ dx: 0, dy: 10 })
+
+        assert.isEqual(rowHeights[0], '70%')
+        assert.isEqual(rowHeights[1], '30%')
+        assert.isEqualDeep(capturedSetFrame, { top: 69, left: 0 })
+    }
+
+    @test()
+    protected static async handlesDividerOnDragForLandscape() {
+        const reporter = this.TestReporter()
+        const columnWidths: any[] = []
+        let capturedSetFrame: any
+
+        reporter.orientation = 'landscape'
+        reporter.splitPercent = 60
+        reporter.bottomLayout = {
+            getFrame: () => ({ top: 0, left: 0, width: 200, height: 100 }),
+            setRowHeight: () => {},
+            setColumnWidth: (opts: any) => {
+                columnWidths.push(opts)
+            },
+            updateLayout: () => {},
+        }
+        reporter.dividerWidget = {
+            setFrame: (frame: any) => {
+                capturedSetFrame = frame
+            },
+        }
+
+        reporter.handleDividerDrag({ dx: 20, dy: 0 })
+
+        assert.isEqualDeep(columnWidths[0], {
+            rowIdx: 0,
+            columnIdx: 0,
+            width: '70%',
+        })
+        assert.isEqualDeep(columnWidths[1], {
+            rowIdx: 0,
+            columnIdx: 1,
+            width: '30%',
+        })
+        assert.isEqualDeep(capturedSetFrame, { top: 0, left: 140 })
+    }
+
+    private static fakeDividerBottomLayout() {
+        return {
+            getRows: () => [{ id: 'row_1' }],
+            addColumn: () => {},
+            addRow: () => {},
+            setColumnWidth: () => {},
+            setRowHeight: () => {},
+            updateLayout: () => {},
+            getFrame: () => ({ top: 4, left: 0, width: 100, height: 46 }),
+            getChildById: () => null,
+        }
     }
 
     @test()
@@ -1025,6 +1195,7 @@ export default class TestReporterTest extends AbstractModuleTest {
             addColumn: () => {},
             setColumnWidth: () => {},
             updateLayout: () => {},
+            getFrame: () => ({ top: 4, left: 0, width: 100, height: 46 }),
             getChildById: (id: string) => (id === 'errors' ? fakeCell : null),
         }
     }

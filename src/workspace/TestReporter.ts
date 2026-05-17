@@ -857,6 +857,9 @@ export default class TestReporter {
 
         const raw = (this.dividerWidget as any).getTermKitElement?.()
         if (raw) {
+            raw.off('drag', raw.onDrag)
+            raw.off('click', raw.onClick)
+            raw.off('wheel', raw.onWheel)
             raw.on('drag', (payload: { dx: number; dy: number }) => {
                 this.handleDividerDrag(payload)
             })

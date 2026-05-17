@@ -907,6 +907,51 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async removesDividerTextBoxInteractionHandlers() {
+        const reporter = this.TestReporter()
+        const removedHandlers: string[] = []
+
+        const fakeRaw = {
+            attr: {} as any,
+            blurAttr: {},
+            draw: () => {},
+            onDrag: () => {},
+            onClick: () => {},
+            onWheel: () => {},
+            on: () => {},
+            off: (event: string, _handler: () => void) => {
+                removedHandlers.push(event)
+            },
+        }
+
+        reporter.orientation = 'landscape'
+        reporter.window = {}
+        reporter.bottomLayout = this.fakeDividerBottomLayout()
+        reporter.widgets = {
+            Widget: () => ({
+                on: () => {},
+                getTermKitElement: () => fakeRaw,
+                getFrame: () => ({ width: 10, height: 1 }),
+            }),
+        }
+
+        reporter.dropInDivider()
+
+        assert.isTrue(
+            removedHandlers.includes('drag'),
+            'onDrag must be removed to prevent text selection while dragging'
+        )
+        assert.isTrue(
+            removedHandlers.includes('click'),
+            'onClick must be removed to prevent focus stealing on click'
+        )
+        assert.isTrue(
+            removedHandlers.includes('wheel'),
+            'onWheel must be removed to prevent focus stealing on scroll'
+        )
+    }
+
+    @test()
     protected static async createsDividerWidgetWithExpectedPortraitOptions() {
         const reporter = this.TestReporter()
         const capturedWidgets: { type: string; options: any }[] = []
@@ -1174,6 +1219,10 @@ export default class TestReporterTest extends AbstractModuleTest {
             blurAttr: { bgColor: 'red' },
             draw: () => {},
             on: (_event: string, _handler: () => void) => {},
+            off: (_event: string, _handler: () => void) => {},
+            onDrag: () => {},
+            onClick: () => {},
+            onWheel: () => {},
         }
         return {
             on: (_event: string, _handler: () => void) => {},

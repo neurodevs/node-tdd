@@ -697,6 +697,40 @@ export default class TestReporterTest extends AbstractModuleTest {
     }
 
     @test()
+    protected static async restoresDividerWhenErrorContentReturns() {
+        const reporter = this.TestReporter()
+        const setFrameCalls: any[] = []
+
+        reporter.orientation = 'landscape'
+        reporter.selectTestPopup = null
+        reporter.lastResults = { testFiles: [], customErrors: ['some error'] }
+        reporter.testLog = { setText: () => {} }
+        reporter.errorLog = { setText: () => {} }
+        reporter.splitPercent = 60
+        reporter.bottomLayout = {
+            getRows: () => [{}, {}],
+            setRowHeight: () => {},
+            updateLayout: () => {},
+            getFrame: () => ({ top: 4, left: 0, width: 100, height: 46 }),
+        }
+        reporter.dividerWidget = {
+            setFrame: (frame: any) => {
+                setFrameCalls.push(frame)
+            },
+        }
+
+        reporter.updateLogs()
+
+        const restoredFrame = setFrameCalls.find(
+            (f) => f.top !== -1 && f.left !== -1
+        )
+        assert.isTruthy(
+            restoredFrame,
+            'dividerWidget.setFrame must be called with visible coordinates when errors reappear'
+        )
+    }
+
+    @test()
     protected static async hidesDividerWhenNoErrorContent() {
         const reporter = this.TestReporter()
         let setFrameCalledWith: any

@@ -715,6 +715,14 @@ export default class TestReporter {
 
             this.lastErrorContent = cleanedLog
             this.errorLog?.setText(cleanedLog)
+
+            if (this.dividerWidget) {
+                const { top, left } = this.buildDividerProps(
+                    this.orientation === 'portrait',
+                    this.bottomLayout.getFrame()
+                )
+                this.dividerWidget.setFrame({ top, left })
+            }
         }
 
         this.bottomLayout.updateLayout()

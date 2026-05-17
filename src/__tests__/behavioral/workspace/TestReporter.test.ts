@@ -617,7 +617,11 @@ export default class TestReporterTest extends AbstractModuleTest {
         let scrollToTopCalled = false
 
         reporter.menu = this.fakeMenu({})
-        reporter.bottomLayout = { updateLayout: () => {} }
+        reporter.bottomLayout = {
+            updateLayout: () => {},
+            getRows: () => [{ id: 'row_1' }],
+            removeRow: () => {},
+        }
         reporter.statusBar = { setText: () => {} }
         reporter.testLog = {
             scrollToTop: () => {
@@ -688,6 +692,58 @@ export default class TestReporterTest extends AbstractModuleTest {
             passingIdx,
             'Failed file must appear before passing file when stopped'
         )
+    }
+
+    @test()
+    protected static async collapsesErrorLogRowWhenNoErrorContent() {
+        const reporter = this.TestReporter() as any
+        const rowHeights: Record<string, string> = {}
+        let updateLayoutCalled = false
+
+        reporter.selectTestPopup = null
+        reporter.lastResults = { testFiles: [], customErrors: [] }
+        reporter.testLog = { setText: () => {} }
+        reporter.bottomLayout = {
+            getRows: () => [{}, {}],
+            setRowHeight: (index: number, height: string) => {
+                rowHeights[index] = height
+            },
+            updateLayout: () => {
+                updateLayoutCalled = true
+            },
+        }
+
+        reporter.updateLogs()
+
+        assert.isEqual(rowHeights[0], '100%', 'row 0 must be 100% when no errors')
+        assert.isEqual(rowHeights[1], '0%', 'row 1 must be 0% when no errors')
+        assert.isTrue(updateLayoutCalled, 'updateLayout must be called when collapsing error row')
+    }
+
+    @test()
+    protected static async expandsErrorLogRowWhenErrorContentPresent() {
+        const reporter = this.TestReporter() as any
+        const rowHeights: Record<string, string> = {}
+
+        reporter.selectTestPopup = null
+        reporter.lastResults = {
+            testFiles: [],
+            customErrors: ['something went wrong'],
+        }
+        reporter.testLog = { setText: () => {} }
+        reporter.errorLog = { setText: () => {} }
+        reporter.bottomLayout = {
+            getRows: () => [{}, {}],
+            setRowHeight: (index: number, height: string) => {
+                rowHeights[index] = height
+            },
+            updateLayout: () => {},
+        }
+
+        reporter.updateLogs()
+
+        assert.isEqual(rowHeights[0], '60%', 'row 0 must be 60% when errors present')
+        assert.isEqual(rowHeights[1], '40%', 'row 1 must be 40% when errors present')
     }
 
     private static fakeMenu(captured: Record<string, string>) {

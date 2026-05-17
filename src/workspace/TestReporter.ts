@@ -631,19 +631,28 @@ export default class TestReporter {
         const { logContent, errorContent } = this.resultsToLogContents(
             this.lastResults
         )
-
         this.testLog.setText(logContent)
 
         if (!errorContent) {
-            this.errorLog?.setText('  Nothing to report...')
+            if (this.bottomLayout.getRows().length === 2) {
+                this.bottomLayout.setRowHeight(0, '100%')
+                this.bottomLayout.setRowHeight(1, '0%')
+            }
         } else {
             !this.errorLog && this.dropInErrorLog()
+
+            if (this.bottomLayout.getRows().length === 2) {
+                this.bottomLayout.setRowHeight(0, '60%')
+                this.bottomLayout.setRowHeight(1, '40%')
+            }
             const cleanedLog = this.cwd
                 ? errorContent.replace(new RegExp(this.cwd + '/', 'gim'), '')
                 : errorContent
 
             this.errorLog?.setText(cleanedLog)
         }
+
+        this.bottomLayout.updateLayout()
     }
 
     private resultsToLogContents(results: TestResults) {

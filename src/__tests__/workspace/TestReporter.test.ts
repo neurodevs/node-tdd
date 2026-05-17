@@ -1319,7 +1319,12 @@ export default class TestReporterTest extends AbstractModuleTest {
             {
                 get: (_t, prop: string) => {
                     if (prop === 'getFrame') {
-                        return () => ({ left: 0, top: 0, width: 100, height: 50 })
+                        return () => ({
+                            left: 0,
+                            top: 0,
+                            width: 100,
+                            height: 50,
+                        })
                     }
                     if (prop === 'getChildById') {
                         return () => null
@@ -1349,7 +1354,10 @@ export default class TestReporterTest extends AbstractModuleTest {
 
         await reporter.start()
 
-        assert.isTruthy(submitHandler, 'submit handler must be registered on filter input')
+        assert.isTruthy(
+            submitHandler,
+            'submit handler must be registered on filter input'
+        )
 
         submitHandler!({ value: '' })
 

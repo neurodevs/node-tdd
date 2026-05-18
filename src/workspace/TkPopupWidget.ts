@@ -1,4 +1,4 @@
-import terminal_kit from 'terminal-kit'
+import terminal_kit from '@neurodevs/terminal-kit'
 import { PopupWidget, PopupWidgetOptions } from './popup.types.js'
 import termKitUtil from './termKit.utility.js'
 import TkBaseWidget, { TkWidgetOptions } from './TkBaseWidget.js'

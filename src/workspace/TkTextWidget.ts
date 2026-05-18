@@ -1,4 +1,4 @@
-import terminal_kit from 'terminal-kit'
+import terminal_kit from '@neurodevs/terminal-kit'
 import { TextWidget, TextWidgetOptions } from './text.types.js'
 import { WidgetFrame } from './widgets.types.js'
 import widgetUtil from './widget.utilities.js'

@@ -1,4 +1,4 @@
-import terminal_kit, { Terminal } from 'terminal-kit'
+import terminal_kit, { Terminal } from '@neurodevs/terminal-kit'
 import {
     contractRegistry,
     FactoryOptions,

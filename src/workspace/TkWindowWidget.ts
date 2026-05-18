@@ -1,4 +1,4 @@
-import terminal_kit from 'terminal-kit'
+import terminal_kit from '@neurodevs/terminal-kit'
 import { Key } from './keySelectChoices.js'
 import { BaseWidget } from './widgets.types.js'
 import { WindowWidget, WindowWidgetOptions } from './window.types.js'

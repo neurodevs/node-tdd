@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import terminal_kit from 'terminal-kit'
+import terminal_kit from '@neurodevs/terminal-kit'
 import { InputWidget, InputWidgetOptions } from './input.types.js'
 import { WidgetFrame } from './widgets.types.js'
 import widgetUtil from './widget.utilities.js'

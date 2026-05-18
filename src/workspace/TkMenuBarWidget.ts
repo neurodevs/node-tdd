@@ -1,4 +1,4 @@
-import terminal_kit from 'terminal-kit'
+import terminal_kit from '@neurodevs/terminal-kit'
 const termKit = terminal_kit as any
 import {
     MenuBarWidget,

@@ -1,4 +1,4 @@
-import terminal_kit from 'terminal-kit'
+import terminal_kit from '@neurodevs/terminal-kit'
 import {
     ProgressBarWidget,
     ProgressBarWidgetOptions,

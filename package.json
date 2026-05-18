@@ -68,7 +68,7 @@
       "<rootDir>/build"
     ],
     "moduleNameMapper": {
-      "^terminal-kit$": "<rootDir>/build/__tests__/mock-terminal-kit.js"
+      "^@neurodevs/terminal-kit$": "<rootDir>/build/__tests__/mock-terminal-kit.js"
     },
     "setupFiles": [
       "<rootDir>/build/__tests__/support/jest.setup.js"

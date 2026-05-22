@@ -21,7 +21,7 @@
   "main": "build/index.js",
   "scripts": {
     "build.ci": "yarn run build.tsc && yarn run lint",
-    "build.dev": "yarn run build.tsc --sourceMap ; yarn run fix.lint ; prettier --write .",
+    "build.dev": "yarn run build.tsc --sourceMap ; yarn run fix.lint ; prettier --write . --log-level warn",
     "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
     "build.tsc": "yarn run build.copy-files && tsc",
     "clean": "yarn run clean.build",
@@ -45,7 +45,7 @@
     "jest-circus": "^30.4.2",
     "jest-matcher-utils": "^30.4.1",
     "lodash-es": "^4.18.1",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.3",
     "ts-expect": "^1.3.0",
     "tsc-watch": "^7.2.0",
     "typescript": "^5.9.3",
@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@neurodevs/eslint-config-ndx": "^1.0.1",
+    "@neurodevs/node-tdd": "^1.1.2",
     "@neurodevs/prettier-config-ndx": "^1.0.2",
     "@types/deep-equal": "^1.0.4",
     "@types/jest": "^30.0.0",
@@ -63,10 +64,13 @@
     "glob": "^13.0.0"
   },
   "jest": {
-    "testRunner": "jest-circus/runner",
-    "maxWorkers": 4,
-    "testTimeout": 5000,
     "testEnvironment": "node",
+    "testRunner": "jest-circus/runner",
+    "testMatch": [
+      "<rootDir>/build/__tests__/**/*.test.js?(x)"
+    ],
+    "testTimeout": 5000,
+    "maxWorkers": 4,
     "roots": [
       "<rootDir>/build"
     ],
@@ -75,9 +79,6 @@
     },
     "setupFiles": [
       "<rootDir>/build/__tests__/support/jest.setup.js"
-    ],
-    "testMatch": [
-      "<rootDir>/build/__tests__/**/*.test.js?(x)"
     ]
   }
 }

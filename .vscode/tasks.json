@@ -23,7 +23,7 @@
     {
       "label": "test.file",
       "type": "shell",
-      "command": "node build/workspace/testRunner.cli.js --pattern \"${fileBasenameNoExtension}\" --watchMode standard --inspect 5200",
+      "command": "node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --pattern \"${fileBasenameNoExtension}\" --watchMode standard --inspect 5200",
       "promptOnClose": false,
       "group": {
         "kind": "test",
@@ -38,7 +38,7 @@
     {
       "label": "test.reporter",
       "type": "shell",
-      "command": "node build/workspace/testRunner.cli.js --watchMode standard",
+      "command": "node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard",
       "promptOnClose": false,
       "group": "test",
       "runOptions": {

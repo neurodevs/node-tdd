@@ -367,6 +367,10 @@ export default class TestReporterTest extends AbstractModuleTest {
                     ],
                 },
                 {
+                    label: 'Launch Terminal',
+                    value: 'launchTerminal',
+                },
+                {
                     label: 'Quit',
                     value: 'quit',
                 },
@@ -1367,6 +1371,79 @@ export default class TestReporterTest extends AbstractModuleTest {
         )
 
         clearInterval(reporter.updateInterval)
+    }
+
+    @test()
+    protected static async launchTerminalOnMacUsesOsascript() {
+        const cwd = '/some/project'
+        const reporter = this.TestReporter({ cwd })
+        TestReporter.platformFn = () => 'darwin'
+
+        const { capturedCmd, fakeSpawn } = this.fakeSpawn()
+        TestReporter.spawnFn = fakeSpawn
+
+        reporter.launchTerminal()
+
+        assert.isEqual(capturedCmd.cmd, 'osascript')
+        assert.isEqualDeep(capturedCmd.args, [
+            '-e',
+            `tell app "Terminal" to do script "cd ${cwd} && node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard"`,
+        ])
+    }
+
+    @test()
+    protected static async launchTerminalOnLinuxUsesXterm() {
+        const cwd = '/some/project'
+        const reporter = this.TestReporter({ cwd })
+        TestReporter.platformFn = () => 'linux'
+
+        const { capturedCmd, fakeSpawn } = this.fakeSpawn()
+        TestReporter.spawnFn = fakeSpawn
+
+        reporter.launchTerminal()
+
+        assert.isEqual(capturedCmd.cmd, 'xterm')
+        assert.isEqualDeep(capturedCmd.args, [
+            '-e',
+            `cd ${cwd} && node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard`,
+        ])
+    }
+
+    @test()
+    protected static async launchTerminalOnWindowsUsesCmd() {
+        const cwd = '/some/project'
+        const reporter = this.TestReporter({ cwd })
+        TestReporter.platformFn = () => 'win32'
+
+        const { capturedCmd, fakeSpawn } = this.fakeSpawn()
+        TestReporter.spawnFn = fakeSpawn
+
+        reporter.launchTerminal()
+
+        assert.isEqual(capturedCmd.cmd, 'cmd')
+        assert.isEqualDeep(capturedCmd.args, [
+            '/c',
+            'start',
+            'cmd',
+            '/k',
+            `cd ${cwd} && node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard`,
+        ])
+    }
+
+    @test()
+    protected static async launchTerminalMenuItemCallsLaunchTerminal() {
+        const reporter = this.TestReporter() as any
+        let launchTerminalCalled = false
+        reporter.launchTerminal = () => {
+            launchTerminalCalled = true
+        }
+
+        reporter.handleMenuSelect({ value: 'launchTerminal' })
+
+        assert.isTrue(
+            launchTerminalCalled,
+            'launchTerminal must be called when menu item is selected'
+        )
     }
 
     private static TestReporter(options?: TestReporterOptions) {

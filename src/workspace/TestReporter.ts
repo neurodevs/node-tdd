@@ -242,6 +242,10 @@ export default class TestReporter {
                     ],
                 },
                 {
+                    label: 'Launch Terminal',
+                    value: 'launchTerminal',
+                },
+                {
                     label: 'Quit',
                     value: 'quit',
                 },
@@ -303,6 +307,9 @@ export default class TestReporter {
                 break
             case 'toggleSmartWatch':
                 this.handleToggleSmartWatch?.()
+                break
+            case 'launchTerminal':
+                this.launchTerminal()
                 break
         }
     }
@@ -947,6 +954,27 @@ export default class TestReporter {
 
         const { top, left } = this.buildDividerProps(isPortrait, layoutFrame)
         this.dividerWidget?.setFrame({ top, left })
+    }
+
+    public launchTerminal() {
+        const cwd = this.cwd ?? process.cwd()
+        const tddCommand =
+            'node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard'
+        const command = `cd ${cwd} && ${tddCommand}`
+        const platform = TestReporter.platformFn()
+
+        const [cmd, ...args] =
+            platform === 'win32'
+                ? ['cmd', '/c', 'start', 'cmd', '/k', command]
+                : platform === 'darwin'
+                  ? [
+                        'osascript',
+                        '-e',
+                        `tell app "Terminal" to do script "${command}"`,
+                    ]
+                  : ['xterm', '-e', command]
+
+        TestReporter.spawnFn(cmd, args)
     }
 
     private copyToClipboard(text: string) {

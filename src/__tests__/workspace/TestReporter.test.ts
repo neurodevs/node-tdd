@@ -18,7 +18,6 @@ export default class TestReporterTest extends AbstractModuleTest {
             cwd: this.cwd,
             watchMode: 'off',
             status: 'ready',
-            isDebugging: false,
         })
         assert.isTruthy(reporter)
     }
@@ -347,10 +346,6 @@ export default class TestReporterTest extends AbstractModuleTest {
                 {
                     label: 'Restart   ',
                     value: 'restart',
-                },
-                {
-                    label: 'Debug    ',
-                    value: 'toggleDebug',
                 },
                 {
                     label: 'Not Watching      ',

@@ -1,5 +1,7 @@
+import { spawn } from 'node:child_process'
+
 import chalk from 'chalk'
-import { spawn } from 'child_process'
+
 import durationUtil from './duration.utility.js'
 import { ButtonWidget } from './button.types.js'
 import { InputWidget } from './input.types.js'
@@ -42,7 +44,6 @@ export default class TestReporter {
     private filterInput!: InputWidget
     private filterPattern?: string
     private clearFilterPatternButton!: ButtonWidget
-    private isDebugging = false
     private watchMode: WatchMode = 'off'
     private status: TestRunnerStatus = 'ready'
     private countDownTimeInterval?: any
@@ -54,7 +55,6 @@ export default class TestReporter {
     private handleQuit?: () => void
     private handleFilterChange?: (pattern?: string) => void
     private handleOpenTestFile?: (testFile: string, testName?: string) => void
-    private handleToggleDebug?: () => void
     private handletoggleStandardWatch?: () => void
     private handleToggleSmartWatch?: () => any
     private minWidth = 50
@@ -68,9 +68,7 @@ export default class TestReporter {
         this.handleOpenTestFile = options?.handleOpenTestFile
         this.handleFilterChange = options?.handleFilterPatternChange
         this.status = options?.status ?? 'ready'
-        this.handleToggleDebug = options?.handleToggleDebug
         this.handletoggleStandardWatch = options?.handletoggleStandardWatch
-        this.isDebugging = options?.isDebugging ?? false
         this.watchMode = options?.watchMode ?? 'off'
         this.handleToggleSmartWatch = options?.handleToggleSmartWatch
 
@@ -82,11 +80,6 @@ export default class TestReporter {
         this.filterPattern = pattern
         this.filterInput.setValue(pattern ?? '')
         this.clearFilterPatternButton.setText(buildPatternButtonText(pattern))
-    }
-
-    public setIsDebugging(isDebugging: boolean) {
-        this.setLabelStatus('toggleDebug', 'Debug', isDebugging)
-        this.isDebugging = isDebugging
     }
 
     public setWatchMode(watchMode: WatchMode) {
@@ -188,7 +181,6 @@ export default class TestReporter {
 
         this.updateOrientation()
 
-        this.setIsDebugging(this.isDebugging)
         this.setWatchMode(this.watchMode)
         this.setStatus(this.status)
 
@@ -222,10 +214,6 @@ export default class TestReporter {
                 {
                     label: 'Restart   ',
                     value: 'restart',
-                },
-                {
-                    label: 'Debug    ',
-                    value: 'toggleDebug',
                 },
                 {
                     label: 'Not Watching      ',
@@ -298,9 +286,6 @@ export default class TestReporter {
                 break
             case 'restart':
                 this.handleStartStop?.()
-                break
-            case 'toggleDebug':
-                this.handleToggleDebug?.()
                 break
             case 'toggleStandardWatch':
                 this.handletoggleStandardWatch?.()
@@ -1126,11 +1111,9 @@ export interface TestReporterOptions {
     handleRerunTestFile?: (fileName: string) => void
     handleOpenTestFile?: (fileName: string, testName?: string) => void
     handleFilterPatternChange?: (pattern?: string) => void
-    handleToggleDebug?: () => void
     handletoggleStandardWatch?: () => void
     handleToggleSmartWatch?: () => void
     filterPattern?: string
-    isDebugging?: boolean
     watchMode?: WatchMode
     status?: TestRunnerStatus
     cwd?: string

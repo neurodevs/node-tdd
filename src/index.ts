@@ -10,3 +10,6 @@ export * from './utilities/decorators.js'
 
 export { default as assert } from './utilities/assert.js'
 export * from './utilities/assert.js'
+
+export { default as TestReporter } from './workspace/TestReporter.js'
+export * from './workspace/TestReporter.js'

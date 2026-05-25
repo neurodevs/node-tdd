@@ -1,7 +1,9 @@
+import { spawn } from 'node:child_process'
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
+
 import chokidar from 'chokidar'
-import { spawn } from 'child_process'
-import { readFileSync } from 'fs'
-import path from 'path'
+
 import CommandServiceImpl from './CommandService.js'
 import TestReporter from './TestReporter.js'
 import TestRunner from './TestRunner.js'
@@ -15,11 +17,9 @@ const has = (flag: string) => args.includes(flag)
 
 const pattern = get('--pattern') ?? null
 const watchMode = (get('--watchMode') ?? 'off') as 'off' | 'standard' | 'smart'
-const inspectPort = parseInt(get('--inspect') ?? '0', 10) || null
 const cwd = process.cwd()
 
 let currentPattern = pattern
-let isDebugging = inspectPort !== null
 let currentWatchMode = watchMode
 let runner: TestRunner | null = null
 let running = false
@@ -28,7 +28,6 @@ const reporter = new TestReporter({
     cwd,
     filterPattern: pattern ?? undefined,
     watchMode,
-    isDebugging,
     status: has('--shouldHoldAtStart') ? 'stopped' : 'ready',
     handleStartStop: () => {
         if (running) {
@@ -53,10 +52,6 @@ const reporter = new TestReporter({
         } else {
             runTests()
         }
-    },
-    handleToggleDebug: () => {
-        isDebugging = !isDebugging
-        reporter.setIsDebugging(isDebugging)
     },
     handletoggleStandardWatch: () => {
         currentWatchMode = currentWatchMode === 'standard' ? 'off' : 'standard'
@@ -129,7 +124,7 @@ async function runTests() {
     try {
         await runner.run({
             pattern: currentPattern,
-            debugPort: isDebugging ? (inspectPort ?? 5200) : null,
+            debugPort: null,
         })
     } catch (err) {
         reporter.appendError(`Test run failed: ${err}`)

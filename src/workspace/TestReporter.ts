@@ -957,10 +957,11 @@ export default class TestReporter {
     }
 
     public launchTerminal() {
+        const launchCommand =
+            'node $([ -f node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js ] && echo node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js || echo build/workspace/testRunner.cli.js) --watchMode standard'
+
         const cwd = this.cwd ?? process.cwd()
-        const tddCommand =
-            'node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard'
-        const command = `cd ${cwd} && ${tddCommand}`
+        const command = `cd ${cwd} && ${launchCommand}`
         const platform = TestReporter.platformFn()
 
         const [cmd, ...args] =

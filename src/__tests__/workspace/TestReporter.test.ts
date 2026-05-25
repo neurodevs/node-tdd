@@ -1387,7 +1387,7 @@ export default class TestReporterTest extends AbstractModuleTest {
         assert.isEqual(capturedCmd.cmd, 'osascript')
         assert.isEqualDeep(capturedCmd.args, [
             '-e',
-            `tell app "Terminal" to do script "cd ${cwd} && node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard"`,
+            `tell app "Terminal" to do script "cd ${cwd} && node $([ -f node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js ] && echo node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js || echo build/workspace/testRunner.cli.js) --watchMode standard"`,
         ])
     }
 
@@ -1405,7 +1405,7 @@ export default class TestReporterTest extends AbstractModuleTest {
         assert.isEqual(capturedCmd.cmd, 'xterm')
         assert.isEqualDeep(capturedCmd.args, [
             '-e',
-            `cd ${cwd} && node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard`,
+            `cd ${cwd} && node $([ -f node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js ] && echo node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js || echo build/workspace/testRunner.cli.js) --watchMode standard`,
         ])
     }
 
@@ -1426,7 +1426,7 @@ export default class TestReporterTest extends AbstractModuleTest {
             'start',
             'cmd',
             '/k',
-            `cd ${cwd} && node node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js --watchMode standard`,
+            `cd ${cwd} && node $([ -f node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js ] && echo node_modules/@neurodevs/node-tdd/build/workspace/testRunner.cli.js || echo build/workspace/testRunner.cli.js) --watchMode standard`,
         ])
     }
 

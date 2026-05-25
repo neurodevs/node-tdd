@@ -230,7 +230,7 @@ export default class TestReporter {
                     ],
                 },
                 {
-                    label: 'Launch Terminal',
+                    label: 'New Terminal',
                     value: 'launchTerminal',
                 },
                 {

@@ -362,7 +362,7 @@ export default class TestReporterTest extends AbstractModuleTest {
                     ],
                 },
                 {
-                    label: 'Launch Terminal',
+                    label: 'New Terminal',
                     value: 'launchTerminal',
                 },
                 {

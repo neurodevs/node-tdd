@@ -18,6 +18,7 @@ import TestLogItemGenerator from './TestLogItemGenerator.js'
 export default class TestReporter {
     public static spawnFn: (cmd: string, args: string[]) => any = spawn
     public static platformFn: () => string = () => process.platform
+    public static nowFn: () => number = () => Date.now()
 
     private started = false
     private table?: any
@@ -49,6 +50,8 @@ export default class TestReporter {
     private countDownTimeInterval?: any
     private cwd: string | undefined
     private orientation: TestReporterOrientation = 'landscape'
+    private runStartedAtMs?: number
+    private totalTimeMs?: number
 
     private handleStartStop?: () => void
     private handleRestart?: () => void
@@ -985,6 +988,8 @@ export default class TestReporter {
                 results.totalTestFiles - (results.totalTestFilesComplete ?? 0)
 
             if (testsRemaining === 0) {
+                this.freezeTotalTime()
+
                 const { percent, totalTests, totalPassedTests, totalTime } =
                     this.generateProgressStats(results)
 
@@ -1018,11 +1023,9 @@ export default class TestReporter {
     } {
         let totalTests = 0
         let totalPassedTests = 0
-        let totalTime = 0
 
         results.testFiles?.forEach((file) => {
             file.tests?.forEach((test) => {
-                totalTime += test.duration
                 if (test.status === 'passed') {
                     totalPassedTests++
                 }
@@ -1038,7 +1041,22 @@ export default class TestReporter {
             percent: percent > 0 ? percent : 0,
             totalTests,
             totalPassedTests,
-            totalTime,
+            totalTime: this.calculateTotalTimeInMs(),
+        }
+    }
+
+    private calculateTotalTimeInMs(): number {
+        if (this.totalTimeMs !== undefined) {
+            return this.totalTimeMs
+        }
+
+        const now = TestReporter.nowFn()
+        return now - (this.runStartedAtMs ?? now)
+    }
+
+    private freezeTotalTime() {
+        if (this.totalTimeMs === undefined) {
+            this.totalTimeMs = this.calculateTotalTimeInMs()
         }
     }
 
@@ -1077,10 +1095,12 @@ export default class TestReporter {
 
     public async destroy() {
         clearInterval(this.updateInterval)
-        await this.window.destroy()
+        this.window.destroy()
     }
 
     public reset() {
+        this.runStartedAtMs = TestReporter.nowFn()
+        this.totalTimeMs = undefined
         this.testLog.setText('')
         this.errorLog?.setText('')
         this.lastResults = {

@@ -828,13 +828,11 @@ export default class TestReporterTest extends AbstractModuleTest {
     @test()
     protected static async setsAllPassingLabelWhenAllTestsPass() {
         const reporter = this.TestReporter()
-        let capturedLabel: string | undefined
-        reporter.bar = {
-            setLabel: (label: string) => {
-                capturedLabel = label
-            },
-            setProgress: () => {},
-        }
+        const clock = this.fakeClock(reporter)
+        const capturedLabel = this.captureBarLabel(reporter)
+
+        reporter.reset()
+        clock.advance(120)
 
         reporter.updateProgressBar({
             totalTestFiles: 1,
@@ -849,19 +847,20 @@ export default class TestReporterTest extends AbstractModuleTest {
             ],
         })
 
-        assert.isEqual(capturedLabel, '100% tests passed — 2/2 passed in 300ms')
+        assert.isEqual(
+            capturedLabel.value,
+            '100% tests passed — 2/2 passed in 120ms'
+        )
     }
 
     @test()
     protected static async setsFailingLabelWithSingularWhenOneTestFails() {
         const reporter = this.TestReporter()
-        let capturedLabel: string | undefined
-        reporter.bar = {
-            setLabel: (label: string) => {
-                capturedLabel = label
-            },
-            setProgress: () => {},
-        }
+        const clock = this.fakeClock(reporter)
+        const capturedLabel = this.captureBarLabel(reporter)
+
+        reporter.reset()
+        clock.advance(120)
 
         reporter.updateProgressBar({
             totalTestFiles: 1,
@@ -876,19 +875,20 @@ export default class TestReporterTest extends AbstractModuleTest {
             ],
         })
 
-        assert.isEqual(capturedLabel, '1 test failed — 1/2 passed in 300ms')
+        assert.isEqual(
+            capturedLabel.value,
+            '1 test failed — 1/2 passed in 120ms'
+        )
     }
 
     @test()
     protected static async setsFailingLabelWithPluralWhenMultipleTestsFail() {
         const reporter = this.TestReporter()
-        let capturedLabel: string | undefined
-        reporter.bar = {
-            setLabel: (label: string) => {
-                capturedLabel = label
-            },
-            setProgress: () => {},
-        }
+        const clock = this.fakeClock(reporter)
+        const capturedLabel = this.captureBarLabel(reporter)
+
+        reporter.reset()
+        clock.advance(120)
 
         reporter.updateProgressBar({
             totalTestFiles: 1,
@@ -904,7 +904,107 @@ export default class TestReporterTest extends AbstractModuleTest {
             ],
         })
 
-        assert.isEqual(capturedLabel, '2 tests failed — 1/3 passed in 350ms')
+        assert.isEqual(
+            capturedLabel.value,
+            '2 tests failed — 1/3 passed in 120ms'
+        )
+    }
+
+    @test()
+    protected static async totalTimeIsWallClockNotSumOfTestFileDurations() {
+        const reporter = this.TestReporter()
+        const clock = this.fakeClock(reporter)
+        const capturedLabel = this.captureBarLabel(reporter)
+
+        reporter.reset()
+        clock.advance(500)
+
+        reporter.updateProgressBar(this.twoFilesRunInParallel())
+
+        assert.isEqual(
+            capturedLabel.value,
+            '100% tests passed — 2/2 passed in 500ms',
+            'total time must be wall clock, not the sum of durations across test files that ran in parallel'
+        )
+    }
+
+    @test()
+    protected static async totalTimeStopsAdvancingOnceRunIsComplete() {
+        const reporter = this.TestReporter()
+        const clock = this.fakeClock(reporter)
+        const capturedLabel = this.captureBarLabel(reporter)
+
+        reporter.reset()
+        clock.advance(500)
+        reporter.updateProgressBar(this.twoFilesRunInParallel())
+
+        clock.advance(5000)
+        reporter.updateProgressBar(this.twoFilesRunInParallel())
+
+        assert.isEqual(
+            capturedLabel.value,
+            '100% tests passed — 2/2 passed in 500ms',
+            'total time must be frozen when the run completes, not keep counting on later redraws'
+        )
+    }
+
+    @test()
+    protected static async totalTimeRestartsForEachRun() {
+        const reporter = this.TestReporter()
+        const clock = this.fakeClock(reporter)
+        const capturedLabel = this.captureBarLabel(reporter)
+
+        reporter.reset()
+        clock.advance(500)
+        reporter.updateProgressBar(this.twoFilesRunInParallel())
+
+        reporter.reset()
+        clock.advance(200)
+        reporter.updateProgressBar(this.twoFilesRunInParallel())
+
+        assert.isEqual(
+            capturedLabel.value,
+            '100% tests passed — 2/2 passed in 200ms',
+            'total time must be measured from the start of the current run'
+        )
+    }
+
+    private static twoFilesRunInParallel() {
+        return {
+            totalTestFiles: 2,
+            totalTestFilesComplete: 2,
+            testFiles: [
+                { tests: [{ status: 'passed', duration: 300 }] },
+                { tests: [{ status: 'passed', duration: 400 }] },
+            ],
+        }
+    }
+
+    private static captureBarLabel(reporter: any) {
+        const captured: { value?: string } = {}
+
+        reporter.bar = {
+            setLabel: (label: string) => {
+                captured.value = label
+            },
+            setProgress: () => {},
+        }
+
+        return captured
+    }
+
+    private static fakeClock(reporter: any, startMs = 1_000_000) {
+        let now = startMs
+        TestReporter.nowFn = () => now
+
+        reporter.testLog = { setText: () => {} }
+        reporter.errorLog = { setText: () => {} }
+
+        return {
+            advance: (ms: number) => {
+                now += ms
+            },
+        }
     }
 
     @test()

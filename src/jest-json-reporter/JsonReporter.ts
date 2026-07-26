@@ -50,37 +50,85 @@ export default class JsonReporter implements Reporter {
     ) {
         this.render({
             status: 'onTestFileResult',
-            test,
-            testResult,
-            aggregatedResult,
+            test: this.slimTest(test),
+            testResult: this.slimTestResult(testResult),
+            aggregatedResult: this.slimAggregatedResult(aggregatedResult),
         })
     }
 
     public onRunStart(results: AggregatedResult) {
-        this.render({ status: 'onRunStart', results })
+        this.render({
+            status: 'onRunStart',
+            results: this.slimAggregatedResult(results),
+        })
     }
 
     public onRunComplete(
-        contexts: Set<TestContext>,
+        _contexts: Set<TestContext>,
         results: AggregatedResult
     ) {
-        this.render({ status: 'onRunComplete', contexts, results })
+        this.render({
+            status: 'onRunComplete',
+            results: this.slimAggregatedResult(results),
+        })
     }
 
     public onTestCaseResult(test: Test, testCaseResult: AssertionResult) {
-        this.render({ status: 'onTestCaseResult', test, testCaseResult })
+        this.render({
+            status: 'onTestCaseResult',
+            test: this.slimTest(test),
+            testCaseResult: this.slimAssertionResult(testCaseResult),
+        })
     }
 
     public onTestFileStart(test: Test) {
-        this.render({ status: 'onTestFileStart', test })
+        this.render({ status: 'onTestFileStart', test: this.slimTest(test) })
     }
 
     public getLastError() {
         return undefined
     }
 
-    public onTestResult(test: Test, testResult: TestResult) {
-        this.render({ status: 'onTestResult', test, testResult })
+    public onTestResult() {}
+
+    private slimTest(test: Test) {
+        return { path: test.path }
+    }
+
+    private slimAssertionResult(result: AssertionResult) {
+        return {
+            title: result.title,
+            status: result.status,
+            failureMessages: result.failureMessages,
+            duration: result.duration ?? null,
+        }
+    }
+
+    private slimTestResult(testResult: TestResult) {
+        return {
+            testFilePath: testResult.testFilePath,
+            failureMessage: testResult.failureMessage ?? null,
+            numFailingTests: testResult.numFailingTests,
+            testResults: testResult.testResults.map((result) =>
+                this.slimAssertionResult(result as AssertionResult)
+            ),
+        }
+    }
+
+    private slimAggregatedResult(results: AggregatedResult) {
+        return {
+            numTotalTestSuites: results.numTotalTestSuites,
+            numFailedTestSuites: results.numFailedTestSuites,
+            numPassedTestSuites: results.numPassedTestSuites,
+            numTotalTests: results.numTotalTests,
+            numFailedTests: results.numFailedTests,
+            numPassedTests: results.numPassedTests,
+            numPendingTests: results.numPendingTests,
+            numTodoTests: results.numTodoTests,
+            testResults: results.testResults.map((testResult) =>
+                this.slimTestResult(testResult)
+            ),
+        }
     }
 
     private render(obj: Record<string, any>) {
@@ -91,9 +139,7 @@ export default class JsonReporter implements Reporter {
         return toWrite
     }
 
-    public onTestStart(test: Test) {
-        this.render({ status: 'onTestStart', test })
-    }
+    public onTestStart() {}
 }
 
 export * from './cycle.js'

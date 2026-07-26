@@ -6,10 +6,13 @@ import JestJsonParser from './JestJsonParser.js'
 import { TestResults } from './test.types.js'
 
 export default class TestRunner extends EventEmitter {
+    public static updateThrottleMs = 50
+
     private cwd: string
     private commandService: CommandServiceImpl
     private wasKilled = false
     private testResults: TestResults = { totalTestFiles: 0 }
+    private pendingUpdate?: ReturnType<typeof setTimeout>
 
     public constructor(options: {
         cwd: string
@@ -68,7 +71,7 @@ export default class TestRunner extends EventEmitter {
                     try {
                         parser.write(data)
                         this.testResults = parser.getResults()
-                        this.emit('did-update', { results: this.testResults })
+                        this.scheduleDidUpdate()
                     } catch (err) {
                         this.emit('did-error', {
                             message: `Parser error: ${err}`,
@@ -78,11 +81,34 @@ export default class TestRunner extends EventEmitter {
             })
         } catch (err) {
             if (!this.testResults.totalTestFiles) {
+                this.flushDidUpdate()
                 throw err
             }
         }
 
+        this.flushDidUpdate()
+
         return { ...this.testResults, wasKilled: this.wasKilled }
+    }
+
+    // Redrawing on every chunk starves the child's stdout pipe, which can keep
+    // jest alive past its open handles timeout. Coalesce redraws instead so the
+    // pipe stays drained.
+    private scheduleDidUpdate() {
+        if (this.pendingUpdate) {
+            return
+        }
+
+        this.pendingUpdate = setTimeout(() => {
+            this.pendingUpdate = undefined
+            this.emit('did-update', { results: this.testResults })
+        }, TestRunner.updateThrottleMs)
+    }
+
+    private flushDidUpdate() {
+        clearTimeout(this.pendingUpdate)
+        this.pendingUpdate = undefined
+        this.emit('did-update', { results: this.testResults })
     }
 
     private isDebugMessage(data: string) {

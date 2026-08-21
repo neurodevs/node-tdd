@@ -1,5 +1,5 @@
-import { spawn, SpawnOptions, ChildProcess } from 'child_process'
-import { Writable } from 'stream'
+import { spawn, SpawnOptions, ChildProcess } from 'node:child_process'
+import { Writable } from 'node:stream'
 
 process.setMaxListeners(100)
 

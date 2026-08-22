@@ -1,5 +1,7 @@
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'node:events'
+
 import { Terminal } from '@neurodevs/terminal-kit'
+
 import {
     BaseWidget,
     EventContract,

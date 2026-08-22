@@ -1,8 +1,4 @@
-import {
-    BaseWidget,
-    WidgetFrame,
-    WidgetFrameCalculated,
-} from './widgets.types.js'
+import { BaseWidget, WidgetFrame } from './widgets.types.js'
 
 const widgetUtil = {
     buildFrame(frame?: Partial<WidgetFrame>, parent?: BaseWidget | null) {
@@ -28,7 +24,12 @@ const widgetUtil = {
             height = parent.getFrame().height * (parseInt(height, 10) / 100)
         }
 
-        return { left, top, height, width } as Partial<WidgetFrameCalculated>
+        return {
+            left,
+            top,
+            height,
+            width,
+        }
     },
 }
 

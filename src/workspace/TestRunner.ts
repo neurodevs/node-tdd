@@ -1,6 +1,7 @@
-import fs from 'fs'
-import pathUtil from 'path'
-import { EventEmitter } from 'events'
+import fs from 'node:fs'
+import pathUtil from 'node:path'
+import { EventEmitter } from 'node:events'
+
 import CommandServiceImpl from './CommandService.js'
 import JestJsonParser from './JestJsonParser.js'
 import { TestResults } from './test.types.js'

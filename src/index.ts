@@ -10,3 +10,5 @@ export * from './utilities/decorators.js'
 
 export { default as assert } from './utilities/assert.js'
 export * from './utilities/assert.js'
+
+export * from './types.js'
